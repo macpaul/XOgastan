@@ -42,11 +42,11 @@
 #include "utils/a2b.h"
 #include "utils/flags.h"
 
-#include "sax/HandlerBase.hpp"
-#include "sax/AttributeList.hpp"
-#include "framework/XMLFormatter.hpp"
-#include "util/XMLUniDefs.hpp"
-#include "util/XMLString.hpp"
+#include <xercesc/sax/HandlerBase.hpp>
+#include <xercesc/sax/AttributeList.hpp>
+#include <xercesc/framework/XMLFormatter.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMLString.hpp>
 
 #include <list>
 #include <map>
