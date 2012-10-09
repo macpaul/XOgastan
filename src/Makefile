@@ -13,18 +13,18 @@ all: $(XOgastan_OBJS)
 	@echo 
 	@echo "Preparing for linking"; 
 	@echo
-	@cd nast; gmake prepare_bin;
-	@cd factory; gmake prepare_bin;
-	@cd utils; gmake prepare_bin;
-	@cd data;gmake prepare_bin;
-	@cd visitor; gmake prepare_bin;
-	@cd htmlWriter;gmake prepare_bin;
-	@cd xmlManager;gmake prepare_bin;
-	@cd error; gmake prepare_bin;
+	@cd nast; make prepare_bin;
+	@cd factory; make prepare_bin;
+	@cd utils; make prepare_bin;
+	@cd data;make prepare_bin;
+	@cd visitor; make prepare_bin;
+	@cd htmlWriter;make prepare_bin;
+	@cd xmlManager;make prepare_bin;
+	@cd error; make prepare_bin;
 	@cp -v main.o bin; 
 	@cp -v Makefile.bin bin/Makefile; 
 	@echo; echo "Linking *.o files"; echo
-	@- cd bin; gmake link; echo; rm -vf *.o; rm -vf Makefile
+	@- cd bin; make link; echo; rm -vf *.o; rm -vf Makefile
 	@echo; echo "XOgastan done !!"; echo
 
 
@@ -34,38 +34,38 @@ main.o:main.cpp
 
 
 nast.o: 
-	@cd nast;gmake all;
+	@cd nast;make all;
 
 factory.o: 
-	@cd factory;gmake all;
+	@cd factory;make all;
 
 utils.o: 
-	@cd utils;gmake all;
+	@cd utils;make all;
 
 visitor.o:
-	@cd visitor;gmake all;
+	@cd visitor;make all;
 
 data.o:
-	@cd data;gmake all;
+	@cd data;make all;
 
 htmlWriter.o:
-	@cd htmlWriter;gmake all;
+	@cd htmlWriter;make all;
 
 xmlManager.o:
-	@cd xmlManager;gmake all;
+	@cd xmlManager;make all;
 
 error.o: 
-	@cd error;gmake all;
+	@cd error;make all;
 
 clean: 
-	@cd nast; gmake clean;  
-	@cd factory; gmake clean;  
-	@cd utils; gmake clean; 
-	@cd data;gmake clean;
-	@cd visitor; gmake clean; 
-	@cd htmlWriter;gmake clean;
-	@cd xmlManager;gmake clean;
-	@cd error; gmake clean;  
+	@cd nast; make clean;  
+	@cd factory; make clean;  
+	@cd utils; make clean; 
+	@cd data;make clean;
+	@cd visitor; make clean; 
+	@cd htmlWriter;make clean;
+	@cd xmlManager;make clean;
+	@cd error; make clean;  
 	@rm -vf *.o 
 	@rm -vfr bin 
 	@echo "All cleaned"; 
@@ -110,7 +110,7 @@ docclean:
 help:
 	@echo "Usage :";
 	@echo;
-	@echo "     gmake LABEL";
+	@echo "     make LABEL";
 	@echo;
 	@echo "where LABEL is one of : "
 	@echo;
