@@ -1,0 +1,11 @@
+
+include ../Makefile.incl
+
+link: $(OBJS)
+	${LINK} -o XOgastan ${LIB_XERCESC_PATHS} ${LIB_LINUX_PATHS} ${OBJS} ${LIB_EXTRA_NAME} ${LIB_XERCESC_NAME}
+
+clean: 
+	@rm -vf *.o; rm -vf Makefile
+
+
+

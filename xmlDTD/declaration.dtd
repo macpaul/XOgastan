@@ -1,0 +1,36 @@
+<!-- declaration -->
+<!ELEMENT declaration  (row*)>
+
+
+<!-- row -->
+<!ELEMENT row (fnct_name,
+               what,
+               line,
+	       name, 
+	       type, 
+	       const_qual, 
+	       volatile_qual,
+	       stars, 
+	       squares) 
+>
+<!ATTLIST row 
+    number          ID       #REQUIRED
+>
+
+
+<!-- atomic values -->
+<!ELEMENT const_qual     (#PCDATA) > 
+<!ELEMENT fnct_name      (#PCDATA) > 
+<!ELEMENT line           (#PCDATA) > 
+<!ELEMENT name           (#PCDATA) > 
+<!ELEMENT squares        (#PCDATA) > 
+<!ELEMENT stars          (#PCDATA) > 
+<!ELEMENT type           (#PCDATA) > 
+<!ELEMENT volatile_qual  (#PCDATA) > 
+<!ELEMENT what           (#PCDATA) > 
+
+
+
+
+
+

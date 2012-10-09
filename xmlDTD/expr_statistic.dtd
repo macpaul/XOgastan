@@ -1,0 +1,24 @@
+<!-- expr_statistic -->
+<!ELEMENT expr_statistic (row*)>
+
+
+<!-- row -->
+<!ELEMENT row  (fnct_name,
+		code, 
+	        value)
+> 
+<!ATTLIST row 
+    number          ID       #REQUIRED
+>
+
+                          
+<!-- atomic values -->
+<!ELEMENT code           (#PCDATA) > 
+<!ELEMENT fnct_name      (#PCDATA) > 
+<!ELEMENT value          (#PCDATA) > 
+
+
+
+
+
+

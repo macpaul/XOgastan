@@ -1,0 +1,844 @@
+/***************************************************************************
+                          state_machine.def  -  description
+                             -------------------
+    begin                :  July 24 2001
+    copyright            : (C) 2001 by Gianluca Masone
+    email                : lucas75it@yahoo.it
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+/*! \file
+
+ \sa state_machine.def
+
+ This file contains the definition of the state machine
+ used to build the nodes during the AST building process.
+
+ The classes used during the AST building process are :
+ - SAXParser (not implemented in this project)
+ - operativeMachine
+ - controlMachine
+ 
+ We can tell :<br><br>
+
+ "The SAXParser read the gxl file one element for time and communicate to<br>
+  the operativeMachine what element it has read. The operativeMachine asks to<br>
+  controlMachine what it will do. The controlMachine<br>
+  answers with a command that the operativeMachine excute. !!"<br>
+
+ In other words :<br><br>
+    
+ "the controlMachine is the mind and the operativeMachine is the hand !!"
+
+ The micro-processor in modern PC works similarly ! We have two internal parts<br>
+ (into the processor) : control-part (CP) and operative-part (OP).<br>
+ The OP has all the hardware elements to read data from cache, to execute<br>
+ add, mult, shift, jump, and so on ... The CP provides mechanism to <br>
+ interpret the instruction read by the OP, and to decide what the OP<br>
+ will do ! So :
+ - The CP controls and communicates with the OP. 
+ - The OP computes and communicates with the CP.
+ In our case the CP is the controlMachine, and the OP is the operativeMachine.
+ Moreover, if you study the design of micro-processor you discover : 
+ the CP implement a state machine.
+
+ OPSS ! We have a class controlMachine that work similar to the CP, then
+ this class implements a state machine.
+
+ What purpose does the state machine have ?<br>
+ When we translate a file foo.c.tu, dumped by the gcc, into the file<br>
+ foo.c.tu.gxl we impose some constraint to the gxl document produced.<br>
+ If you remember these constraints are :
+
+ - The <gxl> can have only one child <graph>
+ - The childs of <graph> are <node> and <edges> 
+ - The order of the elements <node> and <edges> is 
+ not important.
+ - The first child's element of <node> must be <type>
+ - The first child's element of <edge> must be <type>
+ - The child's element of <node> after the first 
+  must be only <attr>. An element <node> can have zero,
+  one, or more children <attr>
+ - An element <edge> doesn't have any childrens element <attr>
+ - An <attr> must have only one and only one child. The child
+  can be an element <string> or an element <int>
+
+ Then the state machine reflect the structure imposed by these
+ rules.
+
+ Now we have a formal definition of the state machine.
+
+ The state machine is defined by a set of signals :<br>
+
+ - Input : event sent from the operativeMachine
+ - Ouput : command sent to the operativeMachine
+
+ a set of states :
+
+ - State : the current state during the gxl parsing
+
+ two table :
+
+ - table for transiction between state
+ - table for transiction between output
+
+ Now we define each set : input, state and output. 
+ After the state transiction table and the output<br>
+ transiction table.
+
+
+ <b>INPUT SIGNALS to the SM</b>
+ 
+ We can have three kinds of input signal :
+
+ - the input signals that communicate the begin of a GXL element
+ - the input signals that communicate the end of a GXL element
+ - the input signal that communicates a CDDATA XML element
+
+ Then, we define : <br><br>
+
+DEFinputSM ( START_gxl_GRAPH )<br>
+DEFinputSM ( START_gxl_NODE )<br>
+DEFinputSM ( START_gxl_ATTR )<br>
+DEFinputSM ( START_gxl_EDGE )<br>
+DEFinputSM ( START_gxl_TYPE )<br>
+DEFinputSM ( START_gxl_STRING )<br>
+DEFinputSM ( START_gxl_INT )<br><br>
+
+DEFinputSM ( END_gxl_GRAPH )<br>
+DEFinputSM ( END_gxl_NODE )<br>
+DEFinputSM ( END_gxl_ATTR )<br>
+DEFinputSM ( END_gxl_EDGE )<br>
+DEFinputSM ( END_gxl_TYPE )<br>
+DEFinputSM ( END_gxl_STRING )<br>
+DEFinputSM ( END_gxl_INT )<br><br>
+
+DEFinputSM (CHAR_gxl_DATA)<br><br>
+
+ The START_gxl_* communicates the begin of a gxl element :<br><br>
+
+ 	START_gxl_GRAPH  	<-- associates to -->  	<graph><br>
+ 	START_gxl_NODE 		<-- associates to -->	<node><br>
+ 	START_gxl_ATTR 		<-- associates to -->	<attr><br>
+ 	START_gxl_EDGE 		<-- associates to -->	<edge><br>
+ 	START_gxl_TYPE 		<-- associates to -->	<type><br>
+ 	START_gxl_STRING 	<-- associates to -->	<string><br>
+ 	START_gxl_INT 		<-- associates to -->	<int><br><br>
+
+ the END_gxl_* communicates the end of a gxl element :<br><br>
+	
+ 	END_gxl_GRAPH  		<-- associates to -->  	</graph><br>
+ 	END_gxl_NODE 		<-- associates to -->	</node><br>
+ 	END_gxl_ATTR 		<-- associates to -->	</attr><br>
+ 	END_gxl_EDGE 		<-- associates to -->	</edge><br>
+ 	END_gxl_TYPE 		<-- associates to -->	</type><br>
+ 	END_gxl_STRING 		<-- associates to -->	</string><br>
+ 	END_gxl_INT 		<-- associates to -->	</int><br><br>
+
+
+ Now a question. Who generate the input signals ?<br>
+ The answer is : they are generated by the class operativeMachine.<br><br>
+
+ The class operativeMachine ovverride the methods : 
+
+- startDocument()
+- startElement(ElementName,attributesList)
+- characters(chars,length)
+- endElement(ElementName)
+- endDocument()
+
+ of the class handlerBase.<br>
+ When we excute the previous method an input signal 
+ is sent to the controlMachine.<br><br>
+
+ Note :<br><br>
+ - The method startElement generates the START_gxl_* input signal
+ - The method endElement generates the END_gxl_* input signal
+ - The method characters generates the CHAR_gxl_DATA input signal
+ 
+
+
+	<b>STATES of SM</b><br>
+
+
+ We have a lot of states. We can divide the set 
+ of all the states in different subsets :
+
+- subset of the states for the GRAPH building
+- subset of the states for the NODE building
+- subset of the states for the EDGE building
+- subset of the states for the ERROR situations
+
+ We describe each subset of states :<br><br>
+
+
+ <b>GRAPH_subset</b> -	the states in this subset are used
+ to trace the position during the
+ parsing of the root element of the
+ XML file.<br>
+
+ The states in this subset are : <br>
+
+
+- <i>start_gxl</i> : 	we are at the begin of the document,
+the parsing process starts.
+
+- <i>in_graph</i> :	we are waiting, into te document, the
+begin of a node, the begin of an edge,
+or the end of the document
+		
+- <i>end_gxl</i> :	we are at the end of the document,
+the parsing process ends. Almost one graph has read !
+
+
+
+
+ <b>NODE_subset</b> -	the states in this subset are used
+ to trace the position, and the situation,
+ during the <node >...</node> parsing.<br>
+
+ The states in this subset are : <br>
+
+- <i>in_node_no_typed</i> :	we are building a node, but we
+haven't recognized the type of 
+the node.
+
+
+- <i>in_type_node</i> :		we are building the type of a 
+node no typed
+
+- <i>in_node_typed</i> :		we are building a node, and we
+have recognized the type of 
+the node.
+
+- <i>in_attr</i> :		we are building the attribute of
+a node typed
+
+- <i>start_int</i> :		we are building the integer value 
+	
+- <i>end_int</i> :		we have built the integer value 
+or we are bulding the integer value
+			
+- <i>start_string</i> :		we are building the string value 
+			
+- <i>end_string</i> :		we have built the string value 
+or we are bulding the string value
+			
+
+
+ <b>EDGE_subset</b> -	the states in this subset are used
+to trace the position, and the situation,
+during the <edge >...</edge> parsing.
+
+ The states in this subset are : <br>
+	
+- <i>in_edge_no_typed</i> :	we are building a edge, but we
+haven't recognized the type of 
+the edge.
+
+
+- <i>in_type_edge</i> :		we are building the type of an 
+edge no typed
+
+
+- <i>in_node_typed</i> :		we are building a edge, and we
+have recognized the type of 
+the edge.
+
+
+
+ <b>ERROR_subset</b> -	the states in this subset are used
+to report the various kinds of errors
+that can occur during the parsing 
+process.<br>
+
+ The states in this subset are : <br>
+
+- <i>ERROR_gxl</i> :		error when we are at the start
+of a gxl document
+
+- <i>ERROR_graph</i> :		error during the parsing of a
+gxl document
+
+- <i>ERROR_node</i> :		error during the parsing of a
+gxl_NODE (typed or not)
+
+- <i>ERROR_attr</i> :		error during the parsing of a
+gxl_ATTR 
+
+- <i>ERROR_int</i> :		error during the parsing of a
+gxl_INT 
+
+- <i>ERROR_string</i> :		error during the parsing of a
+gxl_STRING 
+
+- <i>ERROR_type_node</i> :		error during the parsing of a
+gxl_TYPE of a gxl_NODE
+
+- <i>ERROR_type_edge</i> :		error during the parsing of a
+gxl_TYPE of a gxl_EDGE
+
+- <i>ERROR_edge</i> :		error during the parsing of a
+gxl_EDGE (typed or not)
+
+
+
+
+	<b>OUTPUT SIGNALS of the SM</b>
+
+
+ The controlMachine send an output signal to the
+ operativeMachine.<br>
+ These output signals can be seen like a command that
+ the controlMachine send to the operativeMachine. So, an output signal 
+ is received by the ASTBuilder and an operation is
+ perfomed.<br>
+ Note : the output signal is associated with the
+ transiction between two states, or in other word the 
+ state machine is a Mealy state machine !!<br>
+
+ We can classify the output signal (o-s) in :
+
+- o-s associates with the state::ERROR_subset
+- o-s associates with the state::GRAPH_subset
+- o-s associates with the state::NODE_subset
+- o-s associates with the state::EDGE_subset
+
+ Now, we have a description of each class of o-s.
+
+
+ We use the follow notation :
+
+- STATE1 ===> STATE2	transiction from STATE1
+to STATE2
+
+- ANY ===> STATE2		transiction from any state
+to STATE2
+(the * state must be one of
+the states specified in the
+states-transictions-table)
+
+
+
+ Output signal associates with the state::ERROR_subset<br><br>
+
+- SIGNAL_ERROR_gxl 		<b>transiction</b>  ANY ===> ERROR_gxl
+
+- SIGNAL_ERROR_graph		<b>transiction</b>  ANY ===> ERROR_graph
+
+- SIGNAL_ERROR_node		<b>transiction</b>  ANY ===> ERROR_node
+
+- SIGNAL_ERROR_attr		<b>transiction</b>  ANY ===> ERROR_attr
+
+- SIGNAL_ERROR_int		<b>transiction</b>  ANY ===> ERROR_int
+
+- SIGNAL_ERROR_string		<b>transiction</b>  ANY ===> ERROR_string
+
+- SIGNAL_ERROR_type_node	<b>transiction</b>  ANY ===> ERROR_type_node
+
+- SIGNAL_ERROR_type_edge	<b>transiction</b>  ANY ===> ERROR_type_edge
+
+- SIGNAL_ERROR_edge		<b>transiction</b>  ANY ===> ERROR_edge
+
+
+
+ Output signal associates to the state::GRAPH_subset<br><br>
+
+- BEGIN_build			<b>transiction</b>  
+				start_gxl - in_graph 
+
+- END_build			<b>transiction</b>  
+				in_graph - end_gxl
+
+- INSERT_node			<b>transiction</b>  
+				in_node_typed - in_graph 
+
+- INSERT_edge			<b>transiction</b>  
+				in_edge_typed - in_graph 
+
+- BEGIN_build_node		transiction
+				in_graph - in_node_no_typed
+
+- BEGIN_build_edge		<b>transiction</b>
+				in_graph - in_edge_no_typed
+
+
+ Output signal associates to the state::NODE_subset<br><br>
+
+- BEGIN_build_attr		<b>transiction</b>
+				in_node_typed -	in_attr
+
+- INSERT_attr			<b>transiction</b>
+				in_attr - in_node_typed
+
+- BEGIN_build_int 		<b>transiction</b>
+				in_attr - start_int
+				
+- GET_int_value		<b>transiction</b>
+				start_int - end_int
+
+- ADD_int_value		<b>transiction</b>
+				end_int - end_int
+
+- INSERT_int_value 		<b>transiction</b>
+				end_int - in_attr
+
+- BEGIN_build_string 		<b>transiction</b>
+				in_attr - start_string
+				
+- GET_string_value		<b>transiction</b>
+				start_string - end_string
+
+- ADD_string_value		<b>transiction</b>
+				end_string - end_string
+
+- INSERT_string_value 		<b>transiction</b>
+				end_string - in_attr
+
+- BEGIN_build_type 		<b>transiction</b>
+				in_node_no_typed - in_type_node
+
+- WRITE_type_node 		<b>transiction</b>
+				in_type_node - in_node_typed
+
+
+ Output signal associates to the state::EDGE_subset<br><br>
+
+- BEGIN_build_type 		<b>transiction</b>
+				in_edge_no_typed - in_type_edge
+
+- WRITE_type_edge 		<b>transiction</b>
+				in_type_edge - in_edge_typed
+
+
+
+
+
+	<b>STATES TRANSICTION TABLE<b> <br>
+	and<br> 
+	<b>OUTPUTS TRANSICTION TABLE<b><br>
+
+
+ To define the state <b>transiction</b> table and the output 
+ <b>transiction</b> table we draw the graph of the state machine.
+
+
+\image html stateMachine.gif 	
+*/
+
+
+
+/* 	
+	DEFINTION OF THE INPUT SIGNALS
+
+ We use the follow sintax :
+
+	DEFinputSM ( signal, element, attr_number )
+
+ where :
+	
+ signal - is the signal that the ASTBuilder send to SM 
+	
+ element - is the element that the SAXParser associates 
+ with the signal during the parsing. We must 
+ distinguish the startElement and endElement event.
+
+ attr_number - the number of attributes associates
+ with the gxlElement.
+
+*/
+
+// SAXParser event : startElement(elementName, attributes)
+//
+DEFinputSM(START_gxl_GRAPH, graph, 0)
+DEFinputSM(START_gxl_NODE, node, 1)
+DEFinputSM(START_gxl_ATTR, attr, 1)
+DEFinputSM(START_gxl_EDGE, edge, 2)
+DEFinputSM(START_gxl_TYPE, type, 1)
+DEFinputSM(START_gxl_STRING, string, 0)
+DEFinputSM(START_gxl_INT, int, 0)
+
+// SAXParser event : endElement(attributes)
+//
+DEFinputSM(END_gxl_GRAPH, graph, 0)
+DEFinputSM(END_gxl_NODE, node, 0)
+DEFinputSM(END_gxl_ATTR, attr, 0)
+DEFinputSM(END_gxl_EDGE, edge, 0)
+DEFinputSM(END_gxl_TYPE, type, 0)
+DEFinputSM(END_gxl_STRING, string, 0)
+DEFinputSM(END_gxl_INT, int, 0)
+
+// SAXParser event : characters(chars, length)
+//
+DEFinputSM(CHAR_gxl_DATA, not_element, 0)
+
+
+
+/*
+	DEFINITION OF THE STATES
+
+ We use the follow sintax :
+
+	DEFstateSM(state)
+*/
+
+// GRAPH_subset
+DEFstateSM(start_gxl)
+DEFstateSM(in_graph)
+DEFstateSM(end_gxl)
+
+// NODE_subset::no_typed
+DEFstateSM(in_node_no_typed)
+// NODE_subset::the_type
+DEFstateSM(in_type_node)
+// NODE_subset::typed
+DEFstateSM(in_node_typed)
+DEFstateSM(in_attr)
+DEFstateSM(start_int)
+DEFstateSM(end_int)
+DEFstateSM(start_string)
+DEFstateSM(end_string)
+
+// EDGE_subset::no_typed
+DEFstateSM(in_edge_no_typed)
+// EDGE_subset::the_type
+DEFstateSM(in_type_edge)
+// EDGE_subset::typed
+DEFstateSM(in_edge_typed)
+
+// ERROR_subset
+DEFstateSM(ERROR_gxl)
+DEFstateSM(ERROR_graph)
+DEFstateSM(ERROR_node)
+DEFstateSM(ERROR_attr)
+DEFstateSM(ERROR_int)
+DEFstateSM(ERROR_string)
+DEFstateSM(ERROR_type_node)
+DEFstateSM(ERROR_type_edge)
+DEFstateSM(ERROR_edge)
+
+
+/*
+	DEFINITION OF THE OUTPUT SIGNALS
+
+ We use the follow sintax :
+
+	DEFoutputSM(output-signal)
+
+*/
+
+
+// state::ERROR_subset
+DEFoutputSM(SIGNAL_ERROR_gxl)
+DEFoutputSM(SIGNAL_ERROR_graph)
+DEFoutputSM(SIGNAL_ERROR_node)
+DEFoutputSM(SIGNAL_ERROR_attr)
+DEFoutputSM(SIGNAL_ERROR_int)
+DEFoutputSM(SIGNAL_ERROR_string)
+DEFoutputSM(SIGNAL_ERROR_type_node)
+DEFoutputSM(SIGNAL_ERROR_type_edge)
+DEFoutputSM(SIGNAL_ERROR_edge)
+
+// state::GRAPH_subset
+DEFoutputSM(BEGIN_build)		   
+DEFoutputSM(END_build)	   
+DEFoutputSM(INSERT_node)
+DEFoutputSM(INSERT_edge)
+DEFoutputSM(BEGIN_build_node)
+DEFoutputSM(BEGIN_build_edge)
+
+// state::NODE_subset
+DEFoutputSM(BEGIN_build_attr)
+DEFoutputSM(INSERT_attr)
+DEFoutputSM(BEGIN_build_int)
+DEFoutputSM(GET_int_value)
+DEFoutputSM(ADD_int_value)
+DEFoutputSM(INSERT_int_value)
+DEFoutputSM(BEGIN_build_string)
+DEFoutputSM(GET_string_value)
+DEFoutputSM(ADD_string_value)
+DEFoutputSM(INSERT_string_value)
+
+// state::EDGE_subset
+// state::NODE_subset
+//
+DEFoutputSM(BEGIN_build_type)
+DEFoutputSM(WRITE_type_node)
+DEFoutputSM(WRITE_type_edge)
+
+
+/*
+	DEFINITION OF THE TRANSICTIONS
+
+ We use the follow sintax :
+
+	DEFtranSM(CurrentState, InputSignal, NextState, OutputSignal)
+
+ so the rule :
+
+  DEFtranSM(in_type_edge, END_gxl_attr, 
+  		      ERROR_type_node, SIGNAL_ERROR_type_node)
+
+ means :
+
+  if ((the state of SM is in_type_node) && (the input signal is END_gxl_attr)) {
+	the next state will be ERROR_type_node;
+	the output signal will be SIGNAL_ERROR_type_node;
+  }
+
+*/
+
+
+// Current state : start_gxl
+DEFtranSM(start_gxl, START_gxl_GRAPH, in_graph, BEGIN_build)
+DEFtranSM(start_gxl, START_gxl_NODE, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(start_gxl, START_gxl_ATTR, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(start_gxl, START_gxl_EDGE, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(start_gxl, START_gxl_TYPE, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(start_gxl, START_gxl_STRING, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(start_gxl, START_gxl_INT, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(start_gxl, END_gxl_GRAPH, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(start_gxl, END_gxl_NODE, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(start_gxl, END_gxl_ATTR, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(start_gxl, END_gxl_EDGE, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(start_gxl, END_gxl_TYPE, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(start_gxl, END_gxl_STRING, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(start_gxl, END_gxl_INT, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(start_gxl, CHAR_gxl_DATA, ERROR_gxl, SIGNAL_ERROR_gxl)
+
+// Current state : in_graph
+DEFtranSM(in_graph, START_gxl_GRAPH, ERROR_graph, SIGNAL_ERROR_graph)
+DEFtranSM(in_graph, START_gxl_NODE, in_node_no_typed, BEGIN_build_node)
+DEFtranSM(in_graph, START_gxl_ATTR, ERROR_graph, SIGNAL_ERROR_graph)
+DEFtranSM(in_graph, START_gxl_EDGE, in_edge_no_typed, BEGIN_build_edge)
+DEFtranSM(in_graph, START_gxl_TYPE, ERROR_graph, SIGNAL_ERROR_graph)
+DEFtranSM(in_graph, START_gxl_STRING, ERROR_graph, SIGNAL_ERROR_graph)
+DEFtranSM(in_graph, START_gxl_INT, ERROR_graph, SIGNAL_ERROR_graph)
+DEFtranSM(in_graph, END_gxl_GRAPH, end_gxl, END_build)
+DEFtranSM(in_graph, END_gxl_NODE, ERROR_graph, SIGNAL_ERROR_graph)
+DEFtranSM(in_graph, END_gxl_ATTR, ERROR_graph, SIGNAL_ERROR_graph)
+DEFtranSM(in_graph, END_gxl_EDGE, ERROR_graph, SIGNAL_ERROR_graph)
+DEFtranSM(in_graph, END_gxl_TYPE, ERROR_graph, SIGNAL_ERROR_graph)
+DEFtranSM(in_graph, END_gxl_STRING, ERROR_graph, SIGNAL_ERROR_graph)
+DEFtranSM(in_graph, END_gxl_INT, ERROR_graph, SIGNAL_ERROR_graph)
+DEFtranSM(in_graph, CHAR_gxl_DATA, ERROR_graph, SIGNAL_ERROR_graph)
+
+// Current state : end_gxl
+DEFtranSM(end_gxl, START_gxl_GRAPH, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(end_gxl, START_gxl_NODE, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(end_gxl, START_gxl_ATTR, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(end_gxl, START_gxl_EDGE, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(end_gxl, START_gxl_TYPE, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(end_gxl, START_gxl_STRING, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(end_gxl, START_gxl_INT, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(end_gxl, END_gxl_GRAPH, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(end_gxl, END_gxl_NODE, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(end_gxl, END_gxl_ATTR, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(end_gxl, END_gxl_EDGE, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(end_gxl, END_gxl_TYPE, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(end_gxl, END_gxl_STRING, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(end_gxl, END_gxl_INT, ERROR_gxl, SIGNAL_ERROR_gxl)
+DEFtranSM(end_gxl, CHAR_gxl_DATA, ERROR_gxl, SIGNAL_ERROR_gxl)
+
+//----------
+// THE NODES
+//----------
+
+// Current state : in_node_no_typed
+DEFtranSM(in_node_no_typed, START_gxl_GRAPH, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_no_typed, START_gxl_NODE, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_no_typed, START_gxl_ATTR, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_no_typed, START_gxl_EDGE, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_no_typed, START_gxl_TYPE, in_type_node, BEGIN_build_type)
+DEFtranSM(in_node_no_typed, START_gxl_STRING, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_no_typed, START_gxl_INT, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_no_typed, END_gxl_GRAPH, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_no_typed, END_gxl_NODE, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_no_typed, END_gxl_ATTR, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_no_typed, END_gxl_EDGE, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_no_typed, END_gxl_TYPE, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_no_typed, END_gxl_STRING, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_no_typed, END_gxl_INT, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_no_typed, CHAR_gxl_DATA, ERROR_node, SIGNAL_ERROR_node)
+
+// Current state : in_type_node
+DEFtranSM(in_type_node, START_gxl_GRAPH, ERROR_type_node, SIGNAL_ERROR_type_node)
+DEFtranSM(in_type_node, START_gxl_NODE, ERROR_type_node, SIGNAL_ERROR_type_node)
+DEFtranSM(in_type_node, START_gxl_ATTR, ERROR_type_node, SIGNAL_ERROR_type_node)
+DEFtranSM(in_type_node, START_gxl_EDGE, ERROR_type_node, SIGNAL_ERROR_type_node)
+DEFtranSM(in_type_node, START_gxl_TYPE, ERROR_type_node, SIGNAL_ERROR_type_node)
+DEFtranSM(in_type_node, START_gxl_STRING, ERROR_type_node, SIGNAL_ERROR_type_node)
+DEFtranSM(in_type_node, START_gxl_INT, ERROR_type_node, SIGNAL_ERROR_type_node)
+DEFtranSM(in_type_node, END_gxl_GRAPH, ERROR_type_node, SIGNAL_ERROR_type_node)
+DEFtranSM(in_type_node, END_gxl_NODE, ERROR_type_node, SIGNAL_ERROR_type_node)
+DEFtranSM(in_type_node, END_gxl_ATTR, ERROR_type_node, SIGNAL_ERROR_type_node)
+DEFtranSM(in_type_node, END_gxl_EDGE, ERROR_type_node, SIGNAL_ERROR_type_node)
+DEFtranSM(in_type_node, END_gxl_TYPE, in_node_typed, WRITE_type_node)
+DEFtranSM(in_type_node, END_gxl_STRING, ERROR_type_node, SIGNAL_ERROR_type_node)
+DEFtranSM(in_type_node, END_gxl_INT, ERROR_type_node, SIGNAL_ERROR_type_node)
+DEFtranSM(in_type_node, CHAR_gxl_DATA, ERROR_type_node, SIGNAL_ERROR_type_node)
+
+// Current state : in_node_typed
+DEFtranSM(in_node_typed, START_gxl_GRAPH, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_typed, START_gxl_NODE, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_typed, START_gxl_ATTR, in_attr, BEGIN_build_attr)
+DEFtranSM(in_node_typed, START_gxl_EDGE, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_typed, START_gxl_TYPE, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_typed, START_gxl_STRING, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_typed, START_gxl_INT, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_typed, END_gxl_GRAPH, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_typed, END_gxl_NODE, in_graph, INSERT_node)
+DEFtranSM(in_node_typed, END_gxl_ATTR, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_typed, END_gxl_EDGE, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_typed, END_gxl_TYPE, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_typed, END_gxl_STRING, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_typed, END_gxl_INT, ERROR_node, SIGNAL_ERROR_node)
+DEFtranSM(in_node_typed, CHAR_gxl_DATA, ERROR_node, SIGNAL_ERROR_node)
+
+// Current state : in_attr
+DEFtranSM(in_attr, START_gxl_GRAPH, ERROR_attr, SIGNAL_ERROR_attr)
+DEFtranSM(in_attr, START_gxl_NODE, ERROR_attr, SIGNAL_ERROR_attr)
+DEFtranSM(in_attr, START_gxl_ATTR, ERROR_attr, SIGNAL_ERROR_attr)
+DEFtranSM(in_attr, START_gxl_EDGE, ERROR_attr, SIGNAL_ERROR_attr)
+DEFtranSM(in_attr, START_gxl_TYPE, ERROR_attr, SIGNAL_ERROR_attr)
+DEFtranSM(in_attr, START_gxl_STRING, start_string, BEGIN_build_string)
+DEFtranSM(in_attr, START_gxl_INT, start_int, BEGIN_build_int)
+DEFtranSM(in_attr, END_gxl_GRAPH, ERROR_attr, SIGNAL_ERROR_attr)
+DEFtranSM(in_attr, END_gxl_NODE, ERROR_attr, SIGNAL_ERROR_attr)
+DEFtranSM(in_attr, END_gxl_ATTR, in_node_typed, INSERT_attr)
+DEFtranSM(in_attr, END_gxl_EDGE, ERROR_attr, SIGNAL_ERROR_attr)
+DEFtranSM(in_attr, END_gxl_TYPE, ERROR_attr, SIGNAL_ERROR_attr)
+DEFtranSM(in_attr, END_gxl_STRING, ERROR_attr, SIGNAL_ERROR_attr)
+DEFtranSM(in_attr, END_gxl_INT, ERROR_attr, SIGNAL_ERROR_attr)
+DEFtranSM(in_attr, CHAR_gxl_DATA, ERROR_attr, SIGNAL_ERROR_attr)
+
+// Current state :  start_string
+DEFtranSM(start_string, START_gxl_GRAPH, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(start_string, START_gxl_NODE, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(start_string, START_gxl_ATTR, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(start_string, START_gxl_EDGE, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(start_string, START_gxl_TYPE, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(start_string, START_gxl_STRING, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(start_string, START_gxl_INT, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(start_string, END_gxl_GRAPH, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(start_string, END_gxl_NODE, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(start_string, END_gxl_ATTR, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(start_string, END_gxl_EDGE, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(start_string, END_gxl_TYPE, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(start_string, END_gxl_STRING, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(start_string, END_gxl_INT,  ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(start_string, CHAR_gxl_DATA, end_string, GET_string_value)
+
+// Current state : end_string
+DEFtranSM(end_string, START_gxl_GRAPH, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(end_string, START_gxl_NODE, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(end_string, START_gxl_ATTR, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(end_string, START_gxl_EDGE, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(end_string, START_gxl_TYPE, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(end_string, START_gxl_STRING, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(end_string, START_gxl_INT, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(end_string, END_gxl_GRAPH, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(end_string, END_gxl_NODE, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(end_string, END_gxl_ATTR, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(end_string, END_gxl_EDGE, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(end_string, END_gxl_TYPE, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(end_string, END_gxl_STRING, in_attr, INSERT_string_value)
+DEFtranSM(end_string, END_gxl_INT, ERROR_string, SIGNAL_ERROR_string)
+DEFtranSM(end_string, CHAR_gxl_DATA, end_string, ADD_string_value)
+
+// Current state :  start_int
+DEFtranSM(start_int, START_gxl_GRAPH, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(start_int, START_gxl_NODE, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(start_int, START_gxl_ATTR, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(start_int, START_gxl_EDGE, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(start_int, START_gxl_TYPE, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(start_int, START_gxl_STRING, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(start_int, START_gxl_INT, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(start_int, END_gxl_GRAPH, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(start_int, END_gxl_NODE, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(start_int, END_gxl_ATTR, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(start_int, END_gxl_EDGE, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(start_int, END_gxl_TYPE, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(start_int, END_gxl_STRING, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(start_int, END_gxl_INT,  ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(start_int, CHAR_gxl_DATA, end_int, GET_int_value)
+
+// Current state : end_int
+DEFtranSM(end_int, START_gxl_GRAPH, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(end_int, START_gxl_NODE, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(end_int, START_gxl_ATTR, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(end_int, START_gxl_EDGE, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(end_int, START_gxl_TYPE, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(end_int, START_gxl_STRING, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(end_int, START_gxl_INT, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(end_int, END_gxl_GRAPH, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(end_int, END_gxl_NODE, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(end_int, END_gxl_ATTR, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(end_int, END_gxl_EDGE, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(end_int, END_gxl_TYPE, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(end_int, END_gxl_STRING, ERROR_int, SIGNAL_ERROR_int)
+DEFtranSM(end_int, END_gxl_INT, in_attr, INSERT_int_value)
+DEFtranSM(end_int, CHAR_gxl_DATA, end_int, ADD_int_value)
+
+
+// Current state : in_edge_no_typed
+DEFtranSM(in_edge_no_typed, START_gxl_GRAPH, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_no_typed, START_gxl_NODE, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_no_typed, START_gxl_ATTR, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_no_typed, START_gxl_EDGE, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_no_typed, START_gxl_TYPE, in_type_edge, BEGIN_build_type)
+DEFtranSM(in_edge_no_typed, START_gxl_STRING, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_no_typed, START_gxl_INT, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_no_typed, END_gxl_GRAPH, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_no_typed, END_gxl_NODE, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_no_typed, END_gxl_ATTR, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_no_typed, END_gxl_EDGE, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_no_typed, END_gxl_TYPE, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_no_typed, END_gxl_STRING, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_no_typed, END_gxl_INT, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_no_typed, CHAR_gxl_DATA, ERROR_edge, SIGNAL_ERROR_edge)
+
+// Current state : in_type_edge
+DEFtranSM(in_type_edge, START_gxl_GRAPH, ERROR_type_edge, SIGNAL_ERROR_type_edge)
+DEFtranSM(in_type_edge, START_gxl_NODE, ERROR_type_edge, SIGNAL_ERROR_type_edge)
+DEFtranSM(in_type_edge, START_gxl_ATTR, ERROR_type_edge, SIGNAL_ERROR_type_edge)
+DEFtranSM(in_type_edge, START_gxl_EDGE, ERROR_type_edge, SIGNAL_ERROR_type_edge)
+DEFtranSM(in_type_edge, START_gxl_TYPE, ERROR_type_edge, SIGNAL_ERROR_type_edge)
+DEFtranSM(in_type_edge, START_gxl_STRING, ERROR_type_edge, SIGNAL_ERROR_type_edge)
+DEFtranSM(in_type_edge, START_gxl_INT, ERROR_type_edge, SIGNAL_ERROR_type_edge)
+DEFtranSM(in_type_edge, END_gxl_GRAPH, ERROR_type_edge, SIGNAL_ERROR_type_edge)
+DEFtranSM(in_type_edge, END_gxl_NODE, ERROR_type_edge, SIGNAL_ERROR_type_edge)
+DEFtranSM(in_type_edge, END_gxl_ATTR, ERROR_type_edge, SIGNAL_ERROR_type_edge)
+DEFtranSM(in_type_edge, END_gxl_EDGE, ERROR_type_edge, SIGNAL_ERROR_type_edge)
+DEFtranSM(in_type_edge, END_gxl_TYPE, in_edge_typed, WRITE_type_edge)
+DEFtranSM(in_type_edge, END_gxl_STRING, ERROR_type_edge, SIGNAL_ERROR_type_edge)
+DEFtranSM(in_type_edge, END_gxl_INT, ERROR_type_edge, SIGNAL_ERROR_type_edge)
+DEFtranSM(in_type_edge, CHAR_gxl_DATA, ERROR_type_edge, SIGNAL_ERROR_type_edge)
+
+// Current state : in_edge_typed
+DEFtranSM(in_edge_typed, START_gxl_GRAPH, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_typed, START_gxl_NODE, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_typed, START_gxl_ATTR, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_typed, START_gxl_EDGE, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_typed, START_gxl_TYPE, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_typed, START_gxl_STRING, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_typed, START_gxl_INT, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_typed, END_gxl_GRAPH, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_typed, END_gxl_NODE, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_typed, END_gxl_ATTR, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_typed, END_gxl_EDGE, in_graph, INSERT_edge)
+DEFtranSM(in_edge_typed, END_gxl_TYPE, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_typed, END_gxl_STRING, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_typed, END_gxl_INT, ERROR_edge, SIGNAL_ERROR_edge)
+DEFtranSM(in_edge_typed, CHAR_gxl_DATA, ERROR_edge, SIGNAL_ERROR_edge)
+
+
+

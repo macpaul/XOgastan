@@ -1,0 +1,451 @@
+/***************************************************************************
+			   nast_code.h  -  description
+			      -------------------
+     begin                : July 10 2001
+     copyright            : (C) 2001 by Gianluca Masone
+     email                : lucas75it@yahoo.it
+***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+/*!
+ For more info info see the file nast_node.h
+
+ In the follow we use the syntax :
+
+ 	DEFnastCODE ( UPP_CODE, str_code, common_attr, private_attr)
+
+ where :
+
+ - UPP_CODE is the code use in the enumeration nast_code
+ - str_code is the string used in the gxl document for the code
+ - common_attr is the number of attributes common with the base class
+ - private_attribute is the number of the private attributes (not
+   present in the base class)
+*/
+
+
+//! NULL NODE : absense of information
+DEFnastCODE (NULL_NODE, null_node, 0, 0)
+
+
+/*!
+ Declarations 
+
+ All the declarations share the 3 attributes :
+
+ - artificial_flag
+ - line_in_the_source_file
+ - name_of_the_source_file
+
+ Moreover, we have the private attributes :
+
+ - FUNCTION_DECL : 2 attributes
+ 	-# the_memory_class
+	-# the_linkage_definition
+
+ - PARM_DECL : 1 attribute
+    	-# register_flag
+
+ - VAR_DECL : 1 attribute
+    	-# register_flag
+
+ - FIELD_DECL : 1 attribute
+  	-# bitfield_flag
+
+*/
+DEFnastCODE(TYPE_DECL, type_decl, 3, 0)
+DEFnastCODE(FUNCTION_DECL, function_decl, 3, 2)
+DEFnastCODE(PARM_DECL, parm_decl, 3, 1)
+DEFnastCODE(VAR_DECL, var_decl, 3, 1)
+DEFnastCODE(FIELD_DECL, field_decl, 3, 1)
+DEFnastCODE(CONST_DECL, const_decl, 3, 0)
+DEFnastCODE(LABEL_DECL, label_decl, 3, 0)
+DEFnastCODE(RESULT_DECL, result_decl, 3, 0)
+
+
+/*!
+ Type
+
+ All the types share the 1 attributes :
+
+ - the_qualifier_of_the_type
+
+ Moreover, we have the private attributes :
+
+ - INTEGER_TYPE : 1 attribute
+	-# signed_flag
+
+ - ENUMERAL_TYPE : 1 attribute
+	-# signed_flag
+*/
+DEFnastCODE(VOID_TYPE, void_type, 1, 0)
+DEFnastCODE(FUNCTION_TYPE, function_type, 1, 0)
+DEFnastCODE(INTEGER_TYPE, integer_type, 1, 1)
+DEFnastCODE(ENUMERAL_TYPE, enumeral_type, 1, 1)
+DEFnastCODE(REAL_TYPE, real_type, 1, 0)
+DEFnastCODE(POINTER_TYPE, pointer_type, 1, 0)
+DEFnastCODE(ARRAY_TYPE, array_type, 1, 0)
+DEFnastCODE(RECORD_TYPE, record_type, 1, 0)
+DEFnastCODE(UNION_TYPE, union_type, 1, 0)
+
+
+
+/*!
+ Constant 
+
+ In this hierarcy the constant nast node
+ haven't any attribute.
+*/
+DEFnastCODE(INTEGER_CST, integer_cst, 0, 0)
+DEFnastCODE(REAL_CST, real_cst, 0, 0)
+DEFnastCODE(STRING_CST, string_cst, 0, 0)
+
+
+
+/*!
+ Statement 
+
+ All the statements share the 1 attributes :
+ 
+ - line_in_the_source_file
+
+ Moreover, we have the private attributes :
+
+ - SCOPE_STMT : 2 attributes 
+ 	-# point_flag
+	-# variables_flag
+*/
+DEFnastCODE(BREAK_STMT, break_stmt, 1, 0)
+DEFnastCODE(CONTINUE_STMT, continue_stmt, 1, 0)
+DEFnastCODE(COMPOUND_STMT, compound_stmt, 1, 0)
+DEFnastCODE(DECL_STMT, decl_stmt, 1, 0)
+DEFnastCODE(EXPR_STMT, expr_stmt, 1, 0)
+DEFnastCODE(DO_STMT, do_stmt, 1, 0)
+DEFnastCODE(WHILE_STMT, while_stmt, 1, 0)
+DEFnastCODE(FOR_STMT, for_stmt, 1, 0)
+DEFnastCODE(GOTO_STMT, goto_stmt, 1, 0)
+DEFnastCODE(LABEL_STMT, label_stmt, 1, 0)
+DEFnastCODE(IF_STMT, if_stmt, 1, 0)
+DEFnastCODE(SWITCH_STMT, switch_stmt, 1, 0)
+DEFnastCODE(SCOPE_STMT, scope_stmt, 1, 2)
+DEFnastCODE(RETURN_STMT, return_stmt, 1, 0)
+DEFnastCODE(ASM_STMT, asm_stmt, 1, 0)
+
+
+/*!
+ Other 
+
+ The nodes in this class hierrarcy doesn't have any
+ common attributes, but they may have only private
+ attribute :
+
+ - CASE_LABEL : 1 attribute
+ 	-# case_default_flag
+
+ - IDENTIFIER_NODE : 1 attribute
+	-# name_of_the_indentifier
+*/
+DEFnastCODE(TREE_LIST, tree_list, 0, 0)
+DEFnastCODE(IDENTIFIER_NODE, identifier_node, 0, 0)
+DEFnastCODE(CASE_LABEL, case_label, 0, 1)
+
+
+/*!
+ Unary expressions
+
+ The nodes in this class hierrarcy doesn't have any
+ common and private attributes
+*/
+DEFnastCODE(ENTRY_VALUE_EXPR, entry_value_expr, 0, 0) 
+DEFnastCODE(FIX_TRUNC_EXPR, fix_trunc_expr, 0, 0) 
+DEFnastCODE(FIX_CEIL_EXPR, fix_ceil_expr, 0, 0) 
+DEFnastCODE(FIX_FLOOR_EXPR, fix_floor_expr, 0, 0) 
+DEFnastCODE(FIX_ROUND_EXPR, fix_round_expr, 0, 0) 
+DEFnastCODE(FLOAT_EXPR, float_expr, 0, 0) 
+DEFnastCODE(NEGATE_EXPR, negate_expr, 0, 0) 
+DEFnastCODE(ABS_EXPR, abs_expr, 0, 0) 
+DEFnastCODE(FFS_EXPR, ffs_expr, 0, 0) 
+DEFnastCODE(BIT_NOT_EXPR, bit_not_expr, 0, 0) 
+DEFnastCODE(CARD_EXPR, card_expr, 0, 0) 
+DEFnastCODE(CONVERT_EXPR, convert_expr, 0, 0) 
+DEFnastCODE(NOP_EXPR, nop_expr, 0, 0) 
+DEFnastCODE(NON_LVALUE_EXPR, non_lvalue_expr, 0, 0) 
+DEFnastCODE(CONJ_EXPR, conj_expr, 0, 0) 
+DEFnastCODE(REALPART_EXPR, realpart_expr, 0, 0) 
+DEFnastCODE(IMAGPART_EXPR, imagpart_expr, 0, 0) 
+DEFnastCODE(SIZEOF_EXPR, sizeof_expr, 0, 0) 
+DEFnastCODE(ALIGNOF_EXPR, alignof_expr, 0, 0) 
+DEFnastCODE(REFERENCE_EXPR, reference_expr, 0, 0) 
+DEFnastCODE(RETURN_EXPR, return_expr, 0, 0) 
+DEFnastCODE(VA_ARG_EXPR, va_arg_expr, 0, 0) 
+DEFnastCODE(TRUTH_NOT_EXPR, truth_not_expr, 0, 0) 
+DEFnastCODE(ADDR_EXPR, addr_expr, 0, 0) 
+DEFnastCODE(CLEANUP_POINT_EXPR, cleanup_point_expr, 0, 0) 
+DEFnastCODE(SAVE_EXPR, save_expr, 0, 0) 
+
+
+
+/*!
+ Binary expressions
+
+ The nodes in this class hierrarcy doesn't have any
+ common and private attributes
+*/
+DEFnastCODE(GOTO_SUBROUTINE_EXPR, goto_subroutine_expr, 0, 0) 
+DEFnastCODE(LABELED_BLOCK_EXPR, labeled_block_expr, 0, 0) 
+DEFnastCODE(RTL_EXPR, rtl_expr, 0, 0) 
+DEFnastCODE(SWITCH_EXPR, switch_expr, 0, 0) 
+DEFnastCODE(TRY_FINALLY_EXPR, try_finally_expr, 0, 0) 
+DEFnastCODE(EXIT_BLOCK_EXPR, exit_block_expr, 0, 0) 
+DEFnastCODE(PLUS_EXPR, plus_expr, 0, 0) 
+DEFnastCODE(MINUS_EXPR, minus_expr, 0, 0) 
+DEFnastCODE(MULT_EXPR, mult_expr, 0, 0) 
+DEFnastCODE(TRUNC_DIV_EXPR, trunc_div_expr, 0, 0) 
+DEFnastCODE(CEIL_DIV_EXPR, ceil_div_expr, 0, 0) 
+DEFnastCODE(FLOOR_DIV_EXPR, floor_div_expr, 0, 0) 
+DEFnastCODE(ROUND_DIV_EXPR, round_div_expr, 0, 0) 
+DEFnastCODE(TRUNC_MOD_EXPR, trunc_mod_expr, 0, 0) 
+DEFnastCODE(CEIL_MOD_EXPR, ceil_mod_expr, 0, 0) 
+DEFnastCODE(FLOOR_MOD_EXPR, floor_mod_expr, 0, 0) 
+DEFnastCODE(ROUND_MOD_EXPR, round_mod_expr, 0, 0) 
+DEFnastCODE(RDIV_EXPR, rdiv_expr, 0, 0) 
+DEFnastCODE(EXACT_DIV_EXPR, exact_div_expr, 0, 0) 
+DEFnastCODE(EXPON_EXPR, expon_expr, 0, 0) 
+DEFnastCODE(MIN_EXPR, min_expr, 0, 0) 
+DEFnastCODE(MAX_EXPR, max_expr, 0, 0) 
+DEFnastCODE(LSHIFT_EXPR, lshift_expr, 0, 0) 
+DEFnastCODE(RSHIFT_EXPR, rshift_expr, 0, 0) 
+DEFnastCODE(LROTATE_EXPR, lrotate_expr, 0, 0) 
+DEFnastCODE(RROTATE_EXPR, rrotate_expr, 0, 0) 
+DEFnastCODE(BIT_IOR_EXPR, bit_ior_expr, 0, 0) 
+DEFnastCODE(BIT_XOR_EXPR, bit_xor_expr, 0, 0) 
+DEFnastCODE(BIT_AND_EXPR, bit_and_expr, 0, 0) 
+DEFnastCODE(BIT_ANDTC_EXPR, bit_andtc_expr, 0, 0) 
+DEFnastCODE(IN_EXPR, in_expr, 0, 0) 
+DEFnastCODE(RANGE_EXPR, range_expr, 0, 0) 
+DEFnastCODE(COMPLEX_EXPR, complex_expr, 0, 0) 
+DEFnastCODE(LT_EXPR, lt_expr, 0, 0) 
+DEFnastCODE(LE_EXPR, le_expr, 0, 0) 
+DEFnastCODE(GT_EXPR, gt_expr, 0, 0) 
+DEFnastCODE(GE_EXPR, ge_expr, 0, 0) 
+DEFnastCODE(EQ_EXPR, eq_expr, 0, 0) 
+DEFnastCODE(NE_EXPR, ne_expr, 0, 0) 
+DEFnastCODE(UNORDERED_EXPR, unordered_expr, 0, 0) 
+DEFnastCODE(ORDERED_EXPR, ordered_expr, 0, 0) 
+DEFnastCODE(UNLT_EXPR, unlt_expr, 0, 0) 
+DEFnastCODE(UNLE_EXPR, unle_expr, 0, 0) 
+DEFnastCODE(UNGT_EXPR, ungt_expr, 0, 0) 
+DEFnastCODE(UNGE_EXPR, unge_expr, 0, 0) 
+DEFnastCODE(UNEQ_EXPR, uneq_expr, 0, 0) 
+DEFnastCODE(SET_LE_EXPR, set_le_expr, 0, 0) 
+DEFnastCODE(TRUTH_AND_EXPR, truth_and_expr, 0, 0) 
+DEFnastCODE(TRUTH_OR_EXPR, truth_or_expr, 0, 0) 
+DEFnastCODE(TRUTH_XOR_EXPR, truth_xor_expr, 0, 0) 
+DEFnastCODE(TRUTH_ANDIF_EXPR, truth_andif_expr, 0, 0) 
+DEFnastCODE(TRUTH_ORIF_EXPR, truth_orif_expr, 0, 0) 
+DEFnastCODE(INIT_EXPR, init_expr, 0, 0) 
+DEFnastCODE(MODIFY_EXPR, modify_expr, 0, 0) 
+DEFnastCODE(COMPOUND_EXPR, compound_expr, 0, 0) 
+DEFnastCODE(PREDECREMENT_EXPR, predecrement_expr, 0, 0) 
+DEFnastCODE(PREINCREMENT_EXPR, preincrement_expr, 0, 0) 
+DEFnastCODE(POSTDECREMENT_EXPR, postdecrement_expr, 0, 0) 
+DEFnastCODE(POSTINCREMENT_EXPR, postincrement_expr, 0, 0) 
+
+
+
+/*!
+ Ternary expressions
+
+ The nodes in this class hierrarcy doesn't have any
+ common and private attributes
+*/
+DEFnastCODE(COND_EXPR, cond_expr, 0, 0) 
+
+
+
+/*!
+ Reference expressions
+
+ The nodes in this class hierrarcy doesn't have any
+ common and private attributes
+*/
+DEFnastCODE(COMPONENT_REF, component_ref, 0, 0) 
+DEFnastCODE(ARRAY_REF, array_ref, 0, 0) 
+DEFnastCODE(BIT_FIELD_REF, bit_field_ref, 0, 0) 
+DEFnastCODE(BUFFER_REF, buffer_ref, 0, 0) 
+DEFnastCODE(INDIRECT_REF, indirect_ref, 0, 0) 
+
+
+
+/*!
+ SPECIAL NODES	 
+*/
+DEFnastCODE(BINFO, binfo, 0, 0)
+DEFnastCODE(BLOCK, block, 0, 0)
+DEFnastCODE(ERROR_MARK, error_mark, 0, 0)
+DEFnastCODE(OP_IDENFIER, op_idenfier, 0, 0)
+DEFnastCODE(SRCLOC, srcloc, 0, 0)
+DEFnastCODE(TREE_VEC, tree_vec, 0, 0)
+/*!
+ SPECIAL NODES (WHITHOUT FIELD)
+*/
+DEFnastCODE(ARROW_EXPR, arrow_expr, 0, 0) 
+DEFnastCODE(METHOD_CALL_EXPR, method_call_expr, 0, 0) 
+DEFnastCODE(TAG_DEFN, tag_defn, 0, 0)
+DEFnastCODE(EMPTY_CLASS_EXPR, empty_class_expr, 0, 0) 
+DEFnastCODE(FUNCTION_NAME, function_name, 0, 0)
+DEFnastCODE(TEMPLATE_PARM_INDEX, template_parm_index, 0, 0)
+DEFnastCODE(TEMPLATE_PARM_LEVEL, template_parm_level, 0, 0)
+DEFnastCODE(DEFAULT_ARG, default_arg, 0, 0)
+DEFnastCODE(CPLUS_BINDING, cplus_binding, 0, 0)
+DEFnastCODE(WRAPPER, wrapper, 0, 0)
+DEFnastCODE(OFFSET_REF, offset_ref, 0, 0) 
+DEFnastCODE(SCOPE_REF, scope_ref, 0, 0) 
+DEFnastCODE(MEMBER_REF, member_ref, 0, 0) 
+/*!
+ SPECIAL NODES FOR TEMPLATE
+*/
+DEFnastCODE(TEMPLATE_TYPE_PARM, template_type_parm, 0, 0) 
+DEFnastCODE(TEMPLATE_TEMPLATE_PARM, template_template_parm, 0, 0) 
+DEFnastCODE(BOUND_TEMPLATE_TEMPLATE_PARM, bound_template_template_parm, 0, 0) 
+
+
+
+
+/*!
+ OTHER TYPE NODES
+
+ They share all the attributes common to the type
+ nodes (see type nodes).
+*/
+
+// C++ and other languages	
+DEFnastCODE(COMPLEX_TYPE, complex_type, 1, 0) 
+DEFnastCODE(LANG_TYPE, lang_type, 1, 0) 
+DEFnastCODE(BOOLEAN_TYPE, boolean_type, 1, 0) 
+DEFnastCODE(REFERENCE_TYPE, reference_type, 1, 0) 
+DEFnastCODE(METHOD_TYPE, method_type, 1, 0) 
+DEFnastCODE(CHAR_TYPE, char_type, 1, 0) 
+DEFnastCODE(FILE_TYPE, file_type, 1, 0) 
+DEFnastCODE(QUAL_UNION_TYPE, qual_union_type, 1, 0) 
+DEFnastCODE(SET_TYPE, set_type, 1, 0) 
+DEFnastCODE(VECTOR_TYPE, vector_type, 1, 0) 
+// C++
+DEFnastCODE(TYPENAME_TYPE, typename_type, 1, 0) 
+DEFnastCODE(TYPEOF_TYPE, typeof_type, 1, 0) 
+
+
+/*!
+ OTHER DECL NODES
+
+ They share all the attributes common to the decl
+ nodes (see decl nodes).
+*/
+DEFnastCODE(NAMESPACE_DECL, namespace_decl, 3, 0) 
+DEFnastCODE(TEMPLATE_DECL, template_decl, 3, 0) 
+DEFnastCODE(USING_DECL, using_decl, 3, 0) 
+
+
+
+/*!
+ OTHER STMT NODES
+
+ They share all the attributes common to the stmt
+ nodes (see stmt nodes).
+*/
+DEFnastCODE(START_CATCH_STMT, start_catch_stmt, 1, 0) 
+DEFnastCODE(USING_STMT, using_stmt, 1, 0) 
+DEFnastCODE(OVERLOAD, overload, 1, 0) 
+DEFnastCODE(TRY_BLOCK, try_block, 1, 0) 
+DEFnastCODE(EH_SPEC_BLOCK, eh_spec_block, 1, 0)  
+DEFnastCODE(CLEANUP_STMT, cleanup_stmt, 1, 0) 
+DEFnastCODE(CTOR_STMT, ctor_stmt, 1, 0) 
+DEFnastCODE(HANDLER, handler, 1, 0) 
+DEFnastCODE(MUST_NOT_THROW_EXPR, must_not_throw_expr, 0, 0) 
+DEFnastCODE(SUBOBJECT, subobject, 1, 0) 
+
+
+
+/*!
+ OTHER CST NODES
+
+ They share all the attributes common to the cst
+ nodes (see cst nodes).
+*/
+DEFnastCODE(COMPLEX_CST, complex_cst, 0, 0) 
+DEFnastCODE(PTRMEM_CST, ptrmem_cst, 0, 0)
+
+
+
+
+/*!
+ OTHER EXPR
+
+ They share all the attributes common to the expr
+ nodes (see expr nodes).
+*/
+
+// OTHER C EXPR
+DEFnastCODE(CALL_EXPR, call_expr, 0, 0) 
+DEFnastCODE(EXC_PTR_EXPR, exc_ptr_expr, 0, 0) 
+DEFnastCODE(PLACEHOLDER_EXPR, placeholder_expr, 0, 0) 
+DEFnastCODE(CONSTRUCTOR, constructor, 0, 0)
+DEFnastCODE(STMT_EXPR, stmt_expr, 0, 0) 
+DEFnastCODE(BIND_EXPR, bind_expr, 0, 0) 
+DEFnastCODE(LOOP_EXPR, loop_expr, 0, 0) 
+DEFnastCODE(EXIT_EXPR, exit_expr, 0, 0) 
+DEFnastCODE(TARGET_EXPR, target_expr, 0, 0) 
+DEFnastCODE(EXPR_WITH_FILE_LOCATION, expr_with_file_location, 0, 0)
+DEFnastCODE(THROW_EXPR, throw_expr, 0, 0) 
+DEFnastCODE(AGGR_INIT_EXPR, aggr_init_expr, 0, 0) 
+DEFnastCODE(WITH_CLEANUP_EXPR, with_cleanup_expr, 0, 0) 
+DEFnastCODE(WITH_RECORD_EXPR, with_record_expr, 0, 0) 
+
+// OTHER TERNARY  EXPR (not C)
+DEFnastCODE(NW_EXPR, nw_expr, 0, 0) 
+DEFnastCODE(VEC_NW_EXPR, vec_nw_expr, 0, 0) 
+DEFnastCODE(NEW_EXPR, new_expr, 0, 0) 
+DEFnastCODE(VEC_NEW_EXPR, vec_new_expr, 0, 0) 
+DEFnastCODE(PSEUDO_DTOR_EXPR, pseudo_dtor_expr, 0, 0) 
+DEFnastCODE(MODOP_EXPR, modop_expr, 0, 0) 
+
+// OTHER BINARY EXPR (not C)
+DEFnastCODE(DL_EXPR, dl_expr, 0, 0) 
+DEFnastCODE(VEC_DL_EXPR, vec_dl_expr, 0, 0) 
+DEFnastCODE(DOTSTAR_EXPR, dotstar_expr, 0, 0) 
+DEFnastCODE(DELETE_EXPR, delete_expr, 0, 0) 
+DEFnastCODE(VEC_DELETE_EXPR, vec_delete_expr, 0, 0) 
+DEFnastCODE(USER_CONV, user_conv, 0, 0) 
+DEFnastCODE(CTOR_INITIALIZER, ctor_initializer, 0, 0)
+DEFnastCODE(RETURN_INIT, return_init, 0, 0)
+DEFnastCODE(TEMPLATE_ID_EXPR, template_id_expr, 0, 0) 
+
+// OTHER UNARY EXPR (not C)
+DEFnastCODE(CAST_EXPR, cast_expr, 0, 0) 
+DEFnastCODE(REINTERPRET_CAST_EXPR, reinterpret_cast_expr, 0, 0) 
+DEFnastCODE(CONST_CAST_EXPR, const_cast_expr, 0, 0) 
+DEFnastCODE(DYNAMIC_CAST_EXPR, dynamic_cast_expr, 0, 0) 
+DEFnastCODE(STATIC_CAST_EXPR, static_cast_expr, 0, 0) 
+
+// OTHER SPECIAL UNARY EXPR 
+DEFnastCODE(TYPEID_EXPR, typeid_expr, 0, 0) 
+DEFnastCODE(IDENTITY_CONV, identity_conv, 0, 0) 
+DEFnastCODE(LVALUE_CONV, lvalue_conv, 0, 0) 
+DEFnastCODE(QUAL_CONV, qual_conv, 0, 0) 
+DEFnastCODE(STD_CONV, std_conv, 0, 0) 
+DEFnastCODE(PTR_CONV, ptr_conv, 0, 0) 
+DEFnastCODE(PMEM_CONV, pmem_conv, 0, 0) 
+DEFnastCODE(BASE_CONV, base_conv, 0, 0) 
+DEFnastCODE(REF_BIND, ref_bind, 0, 0)
+DEFnastCODE(AMBIG_CONV, ambig_conv, 0, 0) 
+DEFnastCODE(RVALUE_CONV, rvalue_conv, 0, 0) 
+DEFnastCODE(TYPE_EXPR, type_expr, 0, 0) 
+DEFnastCODE(LOOKUP_EXPR, lookup_expr, 0, 0) 

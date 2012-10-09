@@ -1,0 +1,28 @@
+<!-- parameter -->
+<!ELEMENT parameter  (row*)>
+
+
+<!-- row -->
+<!ELEMENT row (fnct_name,
+	       name, 
+	       type, 
+	       const_qual, 
+	       volatile_qual)
+>
+<!ATTLIST row 
+    number          ID       #REQUIRED
+>
+
+
+<!-- atomic values -->
+<!ELEMENT const_qual     (#PCDATA) > 
+<!ELEMENT fnct_name      (#PCDATA) > 
+<!ELEMENT name           (#PCDATA) > 
+<!ELEMENT type           (#PCDATA) > 
+<!ELEMENT volatile_qual  (#PCDATA) > 
+
+
+
+
+
+

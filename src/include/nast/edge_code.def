@@ -1,0 +1,110 @@
+/***************************************************************************
+			   edge_code.def  -  description
+			      -------------------
+     begin                : July 10 2001
+     copyright            : (C) 2001 by Gianluca Masone
+     email                : lucas75it@yahoo.it
+***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+/*! \file
+
+  \brief Definition of the code of the edges.
+	
+  In this file we list all the code for edges.
+  
+  This file is used to define an enumeration 
+  of the edge code. The enumeration values are  
+  used to reference an edge into the nast_node. 
+
+  The edge_code are listed in alphabetical order
+*/
+
+DEFedgeCODE(aggregate, AGGREGATE_EDGE)
+DEFedgeCODE(alias_name, ALIAS_NAME_EDGE)
+DEFedgeCODE(arguments, ARGUMENTS_EDGE)
+DEFedgeCODE(array, ARRAY_EDGE)
+DEFedgeCODE(assembler_name, ASSEMBLER_NAME_EDGE)
+
+DEFedgeCODE(base_class, BASE_CLASS_EDGE)
+DEFedgeCODE(base_info, BASE_INFO_EDGE)
+DEFedgeCODE(bit_positions, BIT_POSITION_EDGE)
+DEFedgeCODE(body, BODY_EDGE)
+
+DEFedgeCODE(class, CLASS_EDGE)
+DEFedgeCODE(class_pointed, CLASS_POINTED_EDGE)
+DEFedgeCODE(clean_up, CLEAN_UP_EDGE)
+DEFedgeCODE(condition, CONDITION_EDGE)
+DEFedgeCODE(constants, CONSTANTS_EDGE)
+
+DEFedgeCODE(declarations, DECLARATIONS_EDGE)
+DEFedgeCODE(destination, DESTINATION_EDGE)
+DEFedgeCODE(domain_index, DOMAIN_INDEX_EDGE)
+
+DEFedgeCODE(elements, ELEMENTS_EDGE)
+DEFedgeCODE(else, ELSE_EDGE)
+DEFedgeCODE(else_value, ELSE_VALUE_EDGE)
+DEFedgeCODE(expression, EXPRESSION_EDGE)
+
+DEFedgeCODE(field, FIELD_EDGE)
+DEFedgeCODE(fields, FIELDS_EDGE)
+DEFedgeCODE(function, FUNCTION_EDGE)
+
+DEFedgeCODE(handler, HANDLER_EDGE)
+DEFedgeCODE(high_value, HIGH_VALUE_EDGE)
+
+DEFedgeCODE(index, INDEX_EDGE)
+DEFedgeCODE(initializer, INITIALIZER_EDGE)
+DEFedgeCODE(initial_value, INITIAL_VALUE_EDGE)
+DEFedgeCODE(initialization, INITIALIZATION_EDGE)
+DEFedgeCODE(instantiation, INSTANTIATION_EDGE)
+
+DEFedgeCODE(label_name, LABEL_NAME_EDGE) 
+DEFedgeCODE(low_value, LOW_VALUE_EDGE)
+
+DEFedgeCODE(main_variant, MAIN_VARIANT_EDGE)
+DEFedgeCODE(member, MEMBER_EDGE)
+DEFedgeCODE(methods, METHODS_EDGE)
+
+DEFedgeCODE(name, NAME_EDGE)
+DEFedgeCODE(namespace, NAMESPACE_EDGE)
+DEFedgeCODE(next, NEXT_EDGE)
+DEFedgeCODE(next_decl, NEXT_DECL_EDGE)
+DEFedgeCODE(next_overload, NEXT_OVERLOAD_EDGE)
+DEFedgeCODE(next_stmt, NEXT_STMT_EDGE)
+
+DEFedgeCODE(operand_0, OPERAND_0_EDGE)
+DEFedgeCODE(operand_1, OPERAND_1_EDGE)
+DEFedgeCODE(operand_2, OPERAND_2_EDGE)
+
+DEFedgeCODE(parameters, PARAMETERS_EDGE)
+DEFedgeCODE(pointed_class, POINTED_CLASS_EDGE)
+DEFedgeCODE(pointed_to, POINTED_TO_EDGE)
+DEFedgeCODE(purpose, PURPOSE_EDGE)
+
+DEFedgeCODE(raises, RAISES_EDGE)
+DEFedgeCODE(referenced_to, REFERENCED_TO_EDGE)
+DEFedgeCODE(result, RESULT_EDGE)
+
+DEFedgeCODE(scope, SCOPE_EDGE)
+DEFedgeCODE(specialization, SPECIALIZATION_EDGE)
+DEFedgeCODE(statement, STATEMENT_EDGE)
+
+DEFedgeCODE(then, THEN_EDGE)
+DEFedgeCODE(then_value, THEN_VALUE_EDGE)
+DEFedgeCODE(type, TYPE_EDGE)
+DEFedgeCODE(typename, TYPENAME_EDGE)
+DEFedgeCODE(type_returned, TYPE_RETURNED_EDGE)
+
+DEFedgeCODE(value, VALUE_EDGE)
+DEFedgeCODE(values, VALUES_EDGE)
+DEFedgeCODE(variables, VARIABLES_EDGE)
+DEFedgeCODE(virtual_table, VIRTUAL_TABLE_EDGE)

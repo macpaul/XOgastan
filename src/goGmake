@@ -1,0 +1,5 @@
+#!/bin/tcsh
+
+rm -vf gmakeOUTPUT
+gmake >& gmakeOUTPUT
+less gmakeOUTPUT

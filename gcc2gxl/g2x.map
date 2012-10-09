@@ -1,0 +1,1787 @@
+#/***************************************************************************
+#     copyright            : (C) 2001 by lucas75it
+#     email                : lucas75it@yahoo.it
+#***************************************************************************/
+#/***************************************************************************
+# *                                                                         *
+# *   This program is free software; you can redistribute it and/or modify  *
+# *   it under the terms of the GNU General Public License as published by  *
+# *   the Free Software Foundation; either version 2 of the License, or     *
+# *   (at your option) any later version.                                   *
+# *                                                                         *
+# ***************************************************************************/
+#
+###################################################
+#
+# This file contains the translation table for the node	
+# of the gcc's AST.
+#
+# Important : we don't translate alls the
+# fields. For example we don't
+# translate the informations about
+# the size in bit, the aligment, ... These
+# informations aren't important for 
+# the purposes of our analysis (high
+# levele analysis of an AST(.
+#
+# For each node we have the list of the fields that can be 
+# translated. If no field can be translated the node has 
+# a NULL rule. 
+#
+#
+# Important : we suppose that the field to translate contains
+# one field (and its value) for line. 
+#
+# The case element mark the begin for the translation rule.
+# It is replace with the gxl elemnts :
+#
+#	<node id="index">
+#       <type xlink:href="gccast.xml#NODE_CODE"/>
+#       .................................
+#	</node>
+# 
+# A rule can be one of :
+#
+#	NULL
+#	field: *  %  <gxl element>
+#	field %  <gxl element>
+#
+# where :
+# 
+# NULL 
+#
+#	the node has no translantion rule
+#	
+#
+# field: * %  	<gxl element>
+#
+#  	an occurence of field: must be translated with the 
+#	currespondent <gxl element> at the rigth of the simbol
+#	%.
+#	Any string at the rigth of field: must be replaced 
+#	to the * symbol in the <gxl element>
+#
+#	If the <gxl element> is an attribute like 
+#	<attr name="length"><int>*</int></attr>
+#	then the field is part of the <node>...</node>
+#	element.
+#
+#	If the <gxl element> is an edge like 
+#	<edge from="index" to="address"><attr name="typename"/></edge>
+#	then it is an edge that outs from the current node (with the
+#	index index).
+#
+#	For example :
+#
+#	1) lngt:* %<attr name="length"><int>*</int></attr>
+#
+#	   means
+#	
+#	   replace lngt: with <attr name="length"><int>*</int></attr>
+#	   and replace the * with the string at the right of lngt:.
+#
+#	2) tynm:* %<edge from="index" to="*"><attr name="typename"/></edge>
+#
+#	   means 
+#
+#	   replace tynm: with 
+#	   <edge from="index" to="*"><attr name="typename"/></edge>
+#	   the value at the rigth of tynm: is the destination of
+#	   the edge.
+#
+# field 	 %  <gxl element>
+#
+#	an occurence of field: must be translated with the 
+#	currespondent <gxl element> at the rigth of the simbol
+#	%.
+#	No substituation is made in <gxl element>.
+#
+#	The <gxl element> is always an attribute like 
+#	<attr name="flag"><string>unnamed</string></attr>
+#	and it is part of the <node>...</node>
+#	element.
+#
+#
+# The string
+#	
+#	from="index"
+#
+# is always replaced by the index's value of the current node.
+# So if index is 2 the we have the string from="2"
+# 
+#	
+###################################################
+
+
+# ALL THE LINE THAT BEGIN WITH # are INGNORED by THE TRANSLATOR
+# ALL THE BLANK LINE ARE IGNORED by THE TRANSLATOR
+
+
+###############
+#	 
+#SPECIAL NODES	 
+# 	 
+###############
+
+case BINFO:
+prot %<attr name="accessibility"><string>protected</string></attr>
+priv %<attr name="accessibility"><string>private</string></attr>
+pub  %<attr name="accessibility"><string>public</string></attr>
+virt %<attr name="qualification"><string>virtual</string></attr>
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+base:*%<edge from="index" to="*"><type xlink:href="gccast.xml#base_class"/></edge>
+
+case BLOCK:
+NULL
+
+case ERROR_MARK:
+NULL
+
+case OP_IDENFIER:
+NULL
+
+case SRCLOC:
+NULL
+
+
+case IDENTIFIER_NODE:
+strg:*%<attr name="string"><string>*</string></attr>
+operator %<attr name="flag"><string>operator</string></attr>
+tynm:*%<edge from="index" to="*"><type xlink:href="gccast.xml#typename"/></edge>
+unnamed %<attr name="flag"><string>unnamed</string></attr>
+
+
+
+case TREE_LIST:
+purp:*%<edge from="index" to="*"><type xlink:href="gccast.xml#purpose"/></edge>
+valu:*%<edge from="index" to="*"><type xlink:href="gccast.xml#value"/></edge>
+chan:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next"/></edge>
+      
+
+
+case TREE_VEC:
+lngt:* %<attr name="lenght"><int>*</int></attr>
+#{ 
+#??:* 	 %	<link ref="*" direction="out"/>
+#}    
+
+
+############
+#	 
+#TYPE NODES
+# 	 
+############	
+
+case VOID_TYPE: 
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+
+
+case COMPLEX_TYPE: 
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+
+
+case LANG_TYPE: 
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+
+
+case BOOLEAN_TYPE: 
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+
+
+case INTEGER_TYPE:
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+unsigned %<attr name="flag"><string>unsigned</string></attr>
+
+
+
+case ENUMERAL_TYPE: 
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+unsigned %<attr name="flag"><string>unsigned</string></attr>
+
+csts:*%<edge from="index" to="*"><type xlink:href="gccast.xml#constants"/></edge>
+
+
+
+case REAL_TYPE: 
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+      
+
+
+case POINTER_TYPE:
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+ptd:*%<edge from="index" to="*"><type xlink:href="gccast.xml#pointed_to"/></edge>
+ptrmem %<attr name="flag"><string>pointer_member</string></attr>
+cls:*%<edge from="index" to="*"><type xlink:href="gccast.xml#pointed_class"/></edge>
+
+
+
+case REFERENCE_TYPE: 
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+refd:*%<edge from="index" to="*"><type xlink:href="gccast.xml#referenced_to"/></edge>
+      
+
+
+case METHOD_TYPE: 
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+clas:*%<edge from="index" to="*"><type xlink:href="gccast.xml#class"/></edge>
+
+
+
+case FUNCTION_TYPE:
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+retn:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type_returned"/></edge>
+prms:*%<edge from="index" to="*"><type xlink:href="gccast.xml#arguments"/></edge>
+      
+
+
+case ARRAY_TYPE: 
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+elts:*%<edge from="index" to="*"><type xlink:href="gccast.xml#elements"/></edge>
+domn:*%<edge from="index" to="*"><type xlink:href="gccast.xml#domain_index"/></edge>
+
+
+	
+case RECORD_TYPE:
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+struct %<attr name="flag"><string>structure</string></attr>
+flds:*%<edge from="index" to="*"><type xlink:href="gccast.xml#fields"/></edge>
+fncs:*% 	<edge from="index" to="*"><type xlink:href="gccast.xml#methods"/></edge>
+binf:*%<edge from="index" to="*"><type xlink:href="gccast.xml#base_info"/></edge>
+ptrmem%<attr name="flag"><string>pointer_member</string></attr>
+ptd:*%<edge from="index" to="*"><type xlink:href="gccast.xml#pointed_to"/></edge>
+cls:*%<edge from="index" to="*"><type xlink:href="gccast.xml#class_pointed"/></edge>
+vfld:*%<edge from="index" to="*"><type xlink:href="gccast.xml#virtual_table"/></edge>
+#{
+#base:*% 	<link ref="address" direction="out">
+#virtual  %	<attr name="inheritation"><string>virtual</string></attr>
+#protected%	<attr name="accessibility"><string>protected</string></attr>
+#private  %	<attr name="accessibility"><string>private</string></attr>
+#public	 %	<attr name="accessibility"><string>public</string></attr>
+#}
+
+
+case UNION_TYPE: 
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+union %<attr name="flag"><string>union</string></attr>
+flds:*%<edge from="index" to="*"><type xlink:href="gccast.xml#fields"/></edge>
+fncs:*%<edge from="index" to="*"><type xlink:href="gccast.xml#methods"/></edge>
+binf:*%<edge from="index" to="*"><type xlink:href="gccast.xml#base_info"/></edge>
+ptrmem %<attr name="flag"><string>pointer_member</string></attr>
+ptd:*%<edge from="index" to="*"><type xlink:href="gccast.xml#pointed_to"/></edge>
+cls:*%<edge from="index" to="*"><type xlink:href="gccast.xml#class_pointed"/></edge>
+vfld:*%<edge from="index" to="*"><type xlink:href="gccast.xml#virtual_table"/></edge>
+#{
+#base:*% 	<link ref="address" direction="out">
+#virtual  %	<attr name="inheritation"><string>virtual</string></attr>
+#protected%	<attr name="accessibility"><string>protected</string></attr>
+#private  %	<attr name="accessibility"><string>private</string></attr>
+#public	 %	<attr name="accessibility"><string>public</string></attr>
+#}
+
+
+case CHAR_TYPE: 
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+
+case FILE_TYPE: 
+NULL
+
+case QUAL_UNION_TYPE:
+NULL
+
+case SET_TYPE:
+NULL
+
+case VECTOR_TYPE:
+NULL
+
+
+
+############
+#	
+#DECL NODES	 
+# 	 
+############	
+
+case TYPE_DECL: 
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+mngl:*%<edge from="index" to="*"><type xlink:href="gccast.xml#assembler_name"/></edge>
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>	
+scpe:*%<edge from="index" to="*"><type xlink:href="gccast.xml#scope"/></edge>
+srcf:*%<attr name="source_file"><string>*</string></attr>
+srcl:*%<attr name="source_line"><int>*</int></attr>
+artificial %<attr name="flag"><string>artificial</string></attr>	
+chan:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_decl"/></edge>
+
+
+
+case CONST_DECL:
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+mngl:*%<edge from="index" to="*"><type xlink:href="gccast.xml#assembler_name"/></edge>
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>	
+scpe:*%<edge from="index" to="*"><type xlink:href="gccast.xml#scope"/></edge>
+srcf:*%<attr name="source_file"><string>*</string></attr>
+srcl:*%<attr name="source_line"><int>*</int></attr>
+artificial %<attr name="flag"><string>artificial</string></attr>	
+chan:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_decl"/></edge>
+
+cnst:*%<edge from="index" to="*"><type xlink:href="gccast.xml#values"/></edge>
+      
+
+
+case LABEL_DECL:
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+mngl:*%<edge from="index" to="*"><type xlink:href="gccast.xml#assembler_name"/></edge>
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>	
+scpe:*%<edge from="index" to="*"><type xlink:href="gccast.xml#scope"/></edge>
+srcf:*%<attr name="source_file"><string>*</string></attr>
+srcl:*%<attr name="source_line"><int>*</int></attr>
+artificial %<attr name="flag"><string>artificial</string></attr>	
+chan:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_decl"/></edge>
+
+
+
+case VAR_DECL:
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+mngl:*%	<edge from="index" to="*"><type xlink:href="gccast.xml#assembler_name"/></edge>
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>	
+scpe:*%<edge from="index" to="*"><type xlink:href="gccast.xml#scope"/></edge>
+srcf:*%<attr name="source_file"><string>*</string></attr>
+srcl:*%<attr name="source_line"><int>*</int></attr>
+artificial %<attr name="flag"><string>artificial</string></attr>	
+chan:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_decl"/></edge>
+
+init:*%<edge from="index" to="*"><type xlink:href="gccast.xml#initial_value"/></edge>
+register %<attr name="flag"><string>register</string></attr>	
+
+    
+case PARM_DECL:
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+mngl:*%<edge from="index" to="*"><type xlink:href="gccast.xml#assembler_name"/></edge>
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>	
+scpe:*%<edge from="index" to="*"><type xlink:href="gccast.xml#scope"/></edge>
+srcf:*%<attr name="source_file"><string>*</string></attr>
+srcl:*%<attr name="source_line"><int>*</int></attr>
+artificial %<attr name="flag"><string>artificial</string></attr>	
+chan:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_decl"/></edge>
+
+init:*%<edge from="index" to="*"><type xlink:href="gccast.xml#initial_value"/></edge>
+register %<attr name="flag"><string>register</string></attr>	
+
+
+
+
+case FIELD_DECL: 
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+mngl:*%<edge from="index" to="*"><type xlink:href="gccast.xml#assembler_name"/></edge>
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>	
+scpe:*%<edge from="index" to="*"><type xlink:href="gccast.xml#scope"/></edge>
+srcf:*%<attr name="source_file"><string>*</string></attr>
+srcl:*%<attr name="source_line"><int>*</int></attr>
+artificial %<attr name="flag"><string>artificial</string></attr>	
+chan:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_decl"/></edge>
+
+bitfield %<attr name="flag"><string>bitfield</string></attr>
+bpos:*%<edge from="index" to="*"><type xlink:href="gccast.xml#bit_positions"/></edge>
+protected%<attr name="accessibility"><string>protected</string></attr>
+private %<attr name="accessibility"><string>private</string></attr>
+public %<attr name="accessibility"><string>public</string></attr>
+
+
+
+
+case RESULT_DECL: 
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>	
+scpe:*%<edge from="index" to="*"><type xlink:href="gccast.xml#scope"/></edge>
+artificial %<attr name="flag"><string>artificial</string></attr>	
+chan:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_decl"/></edge>
+
+
+
+case FUNCTION_DECL:
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>	
+scpe:*%<edge from="index" to="*"><type xlink:href="gccast.xml#scope"/></edge>
+srcf:*%<attr name="source_file"><string>*</string></attr>
+srcl:*%<attr name="source_line"><int>*</int></attr>
+artificial %<attr name="flag"><string>artificial</string></attr>	
+chan:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_decl"/></edge>
+
+args:*%<edge from="index" to="*"><type xlink:href="gccast.xml#arguments"/></edge>
+undefined  %<attr name="flag"><string>undefined</string></attr>
+extern %<attr name="flag"><string>extern</string></attr>
+static %<attr name="flag"><string>static</string></attr>
+body:* %<edge from="index" to="*"><type xlink:href="gccast.xml#body"/></edge>	
+member     %<attr name="flag"><string>member</string></attr>
+protected  %<attr name="accessibility"><string>protected</string></attr>
+private    %<attr name="accessibility"><string>private</string></attr>
+public %<attr name="accessibility"><string>public</string></attr>
+constructor%<attr name="flag"><string>constructor</string></attr>
+destructor %<attr name="flag"><string>destructor</string></attr>
+operator   %<attr name="flag"><string>operator</string></attr>
+conversion %<attr name="flag"><string>conversion</string></attr>
+global_init%<attr name="flag"><string>initialization</string></attr>
+global_fini%<attr name="flag"><string>finalitazion</string></attr>
+pseudo_tmpl%<attr name="flag"><string></string>friend_of_template</attr>
+thunk %<attr name="flag"><string>thunk</string></attr>
+fn:*%<edge from="index" to="*"><type xlink:href="gccast.xml#body"/></edge>
+
+
+
+
+case NAMESPACE_DECL: 
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>	
+scpe:*%<edge from="index" to="*"><type xlink:href="gccast.xml#scope"/></edge>
+srcf:*%<attr name="source_file"><string>*</string></attr>
+srcl:*%<attr name="source_line"><int>*</int></attr>
+artificial %<attr name="flag"><string>artificial</string></attr>	
+chan:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_decl"/></edge>
+
+alis:*%<edge from="index" to="*"><type xlink:href="gccast.xml#alias_name"/></edge>
+dcls:*%<edge from="index" to="*"><type xlink:href="gccast.xml#declarations"/></edge>
+	
+
+
+case TEMPLATE_DECL:
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>	
+scpe:*%<edge from="index" to="*"><type xlink:href="gccast.xml#scope"/></edge>
+srcf:*%<attr name="source_file"><string>*</string></attr>
+srcl:*%<attr name="source_line"><int>*</int></attr>
+artificial %<attr name="flag"><string>artificial</string></attr>	
+chan:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_decl"/></edge>
+
+rslt:*%<edge from="index" to="*"><type xlink:href="gccast.xml#result"/></edge>
+inst:*%<edge from="index" to="*"><type xlink:href="gccast.xml#instantiation"/></edge>
+spcs:*%<edge from="index" to="*"><type xlink:href="gccast.xml#specialization"/></edge>
+prms:*%<edge from="index" to="*"><type xlink:href="gccast.xml#parameters"/></edge>
+
+
+
+
+
+############
+#	 
+# STMT NODE
+# 	 
+############	
+	
+case ASM_STMT:
+NULL
+
+
+case BREAK_STMT: 
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+
+
+
+case CONTINUE_STMT:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+
+
+case CASE_LABEL:
+low:*%<edge from="index" to="*"><type xlink:href="gccast.xml#low_value"/></edge>
+high:*%<edge from="index" to="*"><type xlink:href="gccast.xml#high_value"/></edge>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+      
+
+case COMPOUND_STMT:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+body:*%<edge from="index" to="*"><type xlink:href="gccast.xml#body"/></edge>
+
+
+
+case DECL_STMT:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+decl:*%<edge from="index" to="*"><type xlink:href="gccast.xml#declarations"/></edge>
+
+
+      
+
+case DO_STMT:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+body:*%<edge from="index" to="*"><type xlink:href="gccast.xml#body"/></edge>
+cond:*%<edge from="index" to="*"><type xlink:href="gccast.xml#condition"/></edge>
+
+
+
+case EXPR_STMT:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+expr:*%<edge from="index" to="*"><type xlink:href="gccast.xml#expression"/></edge>
+
+
+
+case FOR_STMT:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+body:*%<edge from="index" to="*"><type xlink:href="gccast.xml#body"/></edge>
+cond:*%<edge from="index" to="*"><type xlink:href="gccast.xml#condition"/></edge>
+expr:*%<edge from="index" to="*"><type xlink:href="gccast.xml#expression"/></edge>
+init:*%<edge from="index" to="*"><type xlink:href="gccast.xml#initialization"/></edge>
+
+
+
+case GOTO_STMT:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+dest:*%<edge from="index" to="*"><type xlink:href="gccast.xml#destination"/></edge>
+
+
+
+
+case IF_STMT:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+cond:*%<edge from="index" to="*"><type xlink:href="gccast.xml#condition"/></edge>
+then:*%<edge from="index" to="*"><type xlink:href="gccast.xml#then"/></edge>
+else:*%<edge from="index" to="*"><type xlink:href="gccast.xml#else"/></edge>
+
+
+
+case LABEL_STMT:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+labl:*%<edge from="index" to="*"><type xlink:href="gccast.xml#label_name"/></edge>
+
+
+
+case RETURN_STMT: 
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+expr:*%<edge from="index" to="*"><type xlink:href="gccast.xml#expression"/></edge>
+
+
+
+case SWITCH_STMT: 
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+body:*%<edge from="index" to="*"><type xlink:href="gccast.xml#body"/></edge>
+cond:*%<edge from="index" to="*"><type xlink:href="gccast.xml#condition"/></edge>
+
+
+
+case WHILE_STMT:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+body:*%<edge from="index" to="*"><type xlink:href="gccast.xml#body"/></edge>
+cond:*%	<edge from="index" to="*"><type xlink:href="gccast.xml#condition"/></edge>
+
+
+
+case SCOPE_STMT: 
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+begn %<attr name="flag"><string>begin</string></attr>	
+end  %<attr name="flag"><string>end</string></attr>
+null %<attr name="flag"><string>no_variable</string></attr>
+clnp %<attr name="flag"><string>clean_up</string></attr>
+
+
+
+case START_CATCH_STMT: 
+line:*%<attr name="line"><int>*</int></attr>
+next:* %<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+type:* %<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+
+
+     
+case USING_STMT:
+line:*%<attr name="line"><int>*</int></attr>
+next:* %<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+nmsp:* %<edge from="index" to="*"><type xlink:href="gccast.xml#namespace"/></edge>
+
+
+
+
+case OVERLOAD:
+crnt:*%<edge from="index" to="*"><type xlink:href="gccast.xml#function"/></edge>
+chan:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_overload"/></edge>
+      
+
+
+case TRY_BLOCK:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+body:*%<edge from="index" to="*"><type xlink:href="gccast.xml#body"/></edge>
+cleanup%<attr name="flag"><string>clean_up</string></attr>
+hdlr:*%<edge from="index" to="*"><type xlink:href="gccast.xml#handler"/></edge>
+
+
+	
+case EH_SPEC_BLOCK:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+body:*%<edge from="index" to="*"><type xlink:href="gccast.xml#body"/></edge>
+raises:*%<edge from="index" to="*"><type xlink:href="gccast.xml#raises"/></edge>
+
+
+            
+case CLEANUP_STMT:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+expr:*%<edge from="index" to="*"><type xlink:href="gccast.xml#expression"/></edge>
+decl:*%<edge from="index" to="*"><type xlink:href="gccast.xml#declarations"/></edge>
+
+
+    
+case CTOR_STMT:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+begn %<attr name="flag"><string>begin</string></attr>	
+end  %<attr name="flag"><string>end</string></attr>
+
+	
+
+case HANDLER:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+body:*%<edge from="index" to="*"><type xlink:href="gccast.xml#body"/></edge>
+
+
+     
+case MUST_NOT_THROW_EXPR:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+body:*%<edge from="index" to="*"><type xlink:href="gccast.xml#body"/></edge>
+      
+
+
+case SUBOBJECT:
+line:*%<attr name="line"><int>*</int></attr>
+next:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_stmt"/></edge>
+clnp:*%<edge from="index" to="*"><type xlink:href="gccast.xml#clean_up"/></edge>
+
+
+
+	    
+############
+#	 
+#CST NODE
+# 	 
+############	
+
+
+case INTEGER_CST: 
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+
+case STRING_CST: 
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+
+case REAL_CST: 
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+
+case COMPLEX_CST: 
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+      
+case PTRMEM_CST:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+clas:*%<edge from="index" to="*"><type xlink:href="gccast.xml#class"/></edge>
+mbr:*%<edge from="index" to="*"><type xlink:href="gccast.xml#member"/></edge>
+
+
+
+
+############
+# 	   
+#EXPR NODE 
+# 	 
+############	
+
+
+# REFERENCE EXPR
+################
+
+case COMPONENT_REF:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#aggregate"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#field"/></edge>
+
+case ARRAY_REF:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#array"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#index"/></edge>
+
+case BIT_FIELD_REF:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+op2:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_2"/></edge>
+
+case BUFFER_REF:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+case INDIRECT_REF:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+# UNARY_EXPRESSION
+##################
+
+
+case ENTRY_VALUE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+case FIX_TRUNC_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case FIX_CEIL_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case FIX_FLOOR_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case FIX_ROUND_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case FLOAT_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case NEGATE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case ABS_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case FFS_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case BIT_NOT_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case CARD_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case CONVERT_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case NOP_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case NON_LVALUE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case CONJ_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case REALPART_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case IMAGPART_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case SIZEOF_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case ALIGNOF_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case REFERENCE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+case RETURN_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+case VA_ARG_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+case TRUTH_NOT_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case ADDR_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case CLEANUP_POINT_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case SAVE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+# BINARY_EXPRESSION
+###################
+
+case GOTO_SUBROUTINE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+case LABELED_BLOCK_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+case RTL_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+case SWITCH_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+case TRY_FINALLY_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+case EXIT_BLOCK_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+case PLUS_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case MINUS_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case MULT_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case TRUNC_DIV_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case CEIL_DIV_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case FLOOR_DIV_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case ROUND_DIV_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case TRUNC_MOD_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case CEIL_MOD_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case FLOOR_MOD_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case ROUND_MOD_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case RDIV_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case EXACT_DIV_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case EXPON_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case MIN_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case MAX_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case LSHIFT_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case RSHIFT_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case LROTATE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case RROTATE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case BIT_IOR_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case BIT_XOR_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case BIT_AND_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case BIT_ANDTC_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%  	<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case IN_EXPR:
+type:*%	<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case RANGE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case COMPLEX_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case LT_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case LE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case GT_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case GE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case EQ_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case NE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case UNORDERED_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case ORDERED_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case UNLT_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case UNLE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case UNGT_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case UNGE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case UNEQ_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case SET_LE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case TRUTH_ANDIF_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case TRUTH_ORIF_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case INIT_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case MODIFY_EXPR:	
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case COMPOUND_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case PREDECREMENT_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case PREINCREMENT_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case POSTDECREMENT_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case POSTINCREMENT_EXPR: 
+type:*%	<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%  	<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%  	<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+# TERNARY 
+#########
+
+case COND_EXPR: cQuestionOperator
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#condition"/></edge>	
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#then_value"/></edge>
+op2:*%<edge from="index" to="*"><type xlink:href="gccast.xml#else_value"/></edge>
+
+
+
+# OTHER EXPR
+############
+
+case CALL_EXPR: 
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+fn:*%<edge from="index" to="*"><type xlink:href="gccast.xml#function"/></edge>
+args:*%	<edge from="index" to="*"><type xlink:href="gccast.xml#arguments"/></edge>
+      
+
+case EXC_PTR_EXPR: 
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+
+
+case PLACEHOLDER_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+
+
+case CONSTRUCTOR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+elts:*%<edge from="index" to="*"><type xlink:href="gccast.xml#elements"/></edge>
+
+
+
+case STMT_EXPR: 
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+stmt:*%<edge from="index" to="*"><type xlink:href="gccast.xml#statement"/></edge>
+
+
+
+case BIND_EXPR: 
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+vars:*%<edge from="index" to="*"><type xlink:href="gccast.xml#variables"/></edge>
+body:*%<edge from="index" to="*"><type xlink:href="gccast.xml#body"/></edge>
+
+      
+
+case LOOP_EXPR: 
+body:*%<edge from="index" to="*"><type xlink:href="gccast.xml#body"/></edge>
+
+
+
+case EXIT_EXPR: 
+cond:*%<edge from="index" to="*"><type xlink:href="gccast.xml#condition"/></edge>
+
+
+
+case TARGET_EXPR: 
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+decl:*%<edge from="index" to="*"><type xlink:href="gccast.xml#declarations"/></edge>
+init:*%<edge from="index" to="*"><type xlink:href="gccast.xml#initializer"/></edge>
+clnp:*%<edge from="index" to="*"><type xlink:href="gccast.xml#clean_up"/></edge>
+
+
+      
+case EXPR_WITH_FILE_LOCATION: 
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+expr:*%<edge from="index" to="*"><type xlink:href="gccast.xml#expression"/></edge>
+
+
+
+case THROW_EXPR: 
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#expression"/></edge>
+
+
+
+case AGGR_INIT_EXPR:
+fn:*%<edge from="index" to="*"><type xlink:href="gccast.xml#function"/></edge>
+args:*%<edge from="index" to="*"><type xlink:href="gccast.xml#arguments"/></edge>
+decl:*%<edge from="index" to="*"><type xlink:href="gccast.xml#declarations"/></edge>
+
+
+case WITH_CLEANUP_EXPR:
+NULL
+
+case WITH_RECORD_EXPR:
+NULL
+
+####################################
+# ARE THEY DUMPED ?!!? I don't know. 
+####################################
+    
+#####
+#DECL
+#####
+
+
+case USING_DECL:
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>	
+scpe:*%<edge from="index" to="*"><type xlink:href="gccast.xml#scope"/></edge>
+srcf:*%<attr name="source_file"><string>*</string></attr>
+srcl:*%<attr name="source_line"><int>*</int></attr>
+artificial %<attr name="flag"><string>artificial</string></attr>	
+chan:*%<edge from="index" to="*"><type xlink:href="gccast.xml#next_decl"/></edge>
+
+
+##############
+# TERNARY EXPR
+##############
+
+case NW_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+op2:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_2"/></edge>
+
+
+	
+case VEC_NW_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+op2:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_2"/></edge>
+
+
+	
+   
+case NEW_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+op2:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_2"/></edge>
+
+
+	
+case VEC_NEW_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+op2:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_2"/></edge>
+
+
+	
+case PSEUDO_DTOR_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+op2:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_2"/></edge>
+
+
+	
+case MODOP_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+op2:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_2"/></edge>
+
+
+#############
+# BINARY EXPR
+#############
+
+case DL_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case VEC_DL_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+	
+	
+case DOTSTAR_EXPR:	
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case DELETE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case VEC_DELETE_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case USER_CONV:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case CTOR_INITIALIZER:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case RETURN_INIT:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+
+case TEMPLATE_ID_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+op1:%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_1"/></edge>
+
+
+############
+# UNARY EXPR
+############
+
+case CAST_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case REINTERPRET_CAST_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case CONST_CAST_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case DYNAMIC_CAST_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case STATIC_CAST_EXPR:
+type:*%<edge from="index" to="*"><type xlink:href="gccast.xml#type"/></edge>
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+##############################
+# SPECIAL UNARY EXPR 
+##############################
+
+
+case TYPEID_EXPR:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case IDENTITY_CONV:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case LVALUE_CONV:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case QUAL_CONV:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case STD_CONV:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case PTR_CONV:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case PMEM_CONV:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case BASE_CONV:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case REF_BIND:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case AMBIG_CONV:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case RVALUE_CONV:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case TYPE_EXPR:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+
+case LOOKUP_EXPR:
+op0:*%<edge from="index" to="*"><type xlink:href="gccast.xml#operand_0"/></edge>
+
+
+######################
+# NODES WHITHOUT FIELD
+######################
+
+case ARROW_EXPR:
+NULL
+
+
+
+case METHOD_CALL_EXPR:
+NULL
+
+
+case TAG_DEFN:
+NULL
+
+
+
+case EMPTY_CLASS_EXPR:
+NULL
+
+
+
+case FUNCTION_NAME:
+NULL
+
+
+
+case TEMPLATE_PARM_INDEX:
+NULL
+
+
+
+
+case TEMPLATE_PARM_LEVEL:
+NULL
+
+
+
+
+case DEFAULT_ARG:
+NULL
+
+
+
+case CPLUS_BINDING:
+NULL
+
+
+
+case WRAPPER:
+NULL
+
+
+
+case OFFSET_REF:
+NULL
+
+
+
+case SCOPE_REF:
+NULL
+
+
+
+case MEMBER_REF:
+NULL
+
+
+############################
+# SPECIAL NODES FOR TEMPLATE
+############################
+
+
+case TEMPLATE_TYPE_PARM:
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+
+
+case TEMPLATE_TEMPLATE_PARM:
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+
+
+case BOUND_TEMPLATE_TEMPLATE_PARM:
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+
+############
+# OTHER TYPE
+############
+
+
+case TYPENAME_TYPE:
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+
+
+case TYPEOF_TYPE:
+qual:c%<attr name="qualifier"><string>constant</string></attr>
+qual:v%<attr name="qualifier"><string>volatile</string></attr>
+qual:r%<attr name="qualifier"><string>restrict</string></attr>
+name:*%<edge from="index" to="*"><type xlink:href="gccast.xml#name"/></edge>
+unql:*%<edge from="index" to="*"><type xlink:href="gccast.xml#main_variant"/></edge>
+
+

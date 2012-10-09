@@ -1,0 +1,3 @@
+cp -vfr bin/XO* ../../temp
+cp -vfr bin/XO* ../../temp
+cp -vfr bin/XO* ../../testing

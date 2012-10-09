@@ -1,0 +1,126 @@
+#
+# This file contains the macros common to
+# all the Makefile
+#
+# ${XOgastanROOT} is an environment variable.
+# It contains the path of the XOgastan src 
+# directory.
+
+
+# C++ compiler
+CXX = g++
+LINK = g++
+
+# COMPILER FLAGS
+CMP = -c -DLINUX -D_REENTRANT  -fpic ${TESTFLAGS}
+
+
+# LINKER FLAGS
+FLAG_L =  -DLINUX -fpic
+
+# INCLUDE paths
+INCLUDE_USR = -I/usr/include 
+INCLUDE_XOgastan = -I$(XOgastanROOT)/src/include 
+INCLUDE_XERCES = -I$(XERCESCROOT)/include
+INCLUDE = $(INCLUDE_USR) $(INCLUDE_XOgastan) $(INCLUDE_XERCES)
+
+# LIBRARY paths
+LIB_XERCESC_PATHS=-L${XERCESCROOT}/lib
+LIB_LINUX_PATHS=-L/usr/lib -L/usr/local/lib -L/lib
+# LIBRARY NAME
+LIB_EXTRA_NAME = -lc
+LIB_XERCESC_NAME=-lxerces-c1_5 
+
+
+
+# DEFINE Objects *.o files and rule name
+XOgastan_OBJS =	nast.o \
+		factory.o \
+		utils.o \
+		data.o \
+		visitor.o \
+		htmlWriter.o \
+		xmlManager.o \
+		error.o \
+		main.o
+
+FACTORY_OBJ = 	controlMachine.o  \
+		operativeMachine.o \
+		gxl_attr.o \
+		gxl_edge.o 
+
+NAST_OBJ=	nast_node.o \
+	  	type_n.o \
+	  	decl_n.o \
+	  	cst_n.o \
+	  	stmt_n.o \
+	  	othr_n.o \
+		expr_n.o
+
+UTILS_OBJ =	is_functions.o \
+	  	get_functions.o \
+		print_warning.o \
+		a2b.o \
+		dot2gif.o
+
+VISITOR_OBJ =	visitor.o \
+		visit_fnctBodyGraph.o \
+		visit_fnctCFG.o \
+		visit_declsInFnct.o \
+		visit_exprsInFnct.o \
+		visit_varUsedByFnct.o \
+		visit_fnctsInNast.o \
+		visit_stmtNumber.o \
+		visit_exprNumber.o \
+		visit_nastNumber.o \
+		visit_fnctCallGraph.o
+
+DATA_OBJ = 	fnctData.o \
+		declData.o \
+		exprData.o \
+		varUsedData.o \
+		stmtNumData.o \
+		exprNumData.o \
+		nastNumData.o \
+		graphData.o \
+		dataFilter.o \
+		DATAfilesRegister.o
+
+
+HTMLWRITER_OBJ = 	HTMLfilesRegister.o \
+			HTMLofstream.o \
+			HTMLwriter.o \
+			write_htmlHomePage.o \
+			write_htmlFnctFilter.o \
+			write_htmlFnctPages.o \
+			write_htmlNastStat.o
+
+XMLMANAGER_OBJ =	XMLWriter.o \
+			XMLDOM_str_exception.o \
+			build_xmlFunctionDOM.o \
+			build_xmlDeclarationDOM.o \
+			build_xmlVarUsedDOM.o \
+			build_xmlParameterDOM.o \
+			build_xmlStatisticDOM.o \
+			build_xmlStmtStatDOM.o \
+			build_xmlExprStatDOM.o \
+			build_xmlReachStatDOM.o \
+			build_xmlNastStatDOM.o
+
+
+ERROR_OBJ = 	bad_XOgastan.o
+
+
+OBJS = 	main.o \
+	${FACTORY_OBJ} \
+	${NAST_OBJ} \
+	${UTILS_OBJ} \
+	${ERROR_OBJ} \
+	${VISITOR_OBJ} \
+	${HTMLWRITER_OBJ} \
+	${XMLMANAGER_OBJ} \
+	${DATA_OBJ}
+
+
+
+

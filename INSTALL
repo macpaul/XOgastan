@@ -1,0 +1,52 @@
+The cook book for the XOgastan use.
+I suppose you use the bash shell (for the others shell you can think ...)
+
+Get one of the package :
+- XOgastanFull.tar.gz full version with all the documentation 
+- XOgastanHack.tar.gz full version with the documentation, but without the full testing documentation 
+- XOgastanUser.tar.gz only the sources 
+
+--> Next step
+Extract file :
+
+tar xvzf XOgastanUser.tar.gz
+
+--> Next step
+In your .bashrc set environmente variable XOgastanROOT :
+
+export XOgastanROOT=/home/lucas75it/XOgastan
+
+Where in my home computer /home/lucas75it/XOgastan is the base path for XOgastan. 
+
+--> Next step
+To compile XOgastan go to :
+
+cd $XOgastanROOT/src
+and type : 
+gmake
+ 
+
+--> Next step
+Now we see how to analyze a gcc ast
+If foo.c.tu is the file dumped by the gcc then :  
+
+1. Use the perl script into the $XOgastanROOT/gcc2gxl/ directory :
+	1.1 oneFORline.pl --ifile foo.c.tu --ofile foo.c.tu.ONE 
+	1.2 gcc2gxl.pl --ifile foo.c.tu.ONE --ofile foo.c.tu.gxl --table g2x.map 
+	1.3 if yuo want you can del the file foo.c.tu.ONE 
+
+2. Use the binary XOgastan to analyze foo.c.tu.gxl :
+	2.1 make in same directory the files $XOgastanROOT/src/bin/XOgastan 
+	    and $XOgastanROOT/xmlDTD/gxl.dtd 
+
+	2.2 for the help type : 
+		XOgastan -? 
+
+	2.3 run XOgastan by typing : XOgastan foo.c.tu.gxl 
+
+	2.4 copy the files $XOgastanROOT/doc/img/xogastan* 
+	    in the output directory html/ 
+	2.5 copy the files $XOgastanROOT/xmlDTD/* in the output directory xml/ 
+
+	2.6 see the output directory html/ xml/ dot/ img/ txt/ 
+	2.7 If you don't like call me at lucast75it@yahoo.it 

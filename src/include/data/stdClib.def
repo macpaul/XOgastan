@@ -1,0 +1,196 @@
+/***************************************************************************
+			   stdClib.h  -  description
+			      -------------------
+     begin                : Aug 29 2001
+     copyright            : (C) 2001 by Gianluca Masone
+     email                : lucas75it@yahoo.it
+***************************************************************************/
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+	
+/*! \file
+   
+    This file list all the function
+    of the C standard library.
+
+    We use the defination DEFcStdLibraryFnct 
+    to populate the map of the C std function
+    in the class fnctData.
+    This map is used to check if a function belong to
+    the C standard library, or not.
+
+    The syntax of the definition is :
+
+	DEFcStdLibraryFnct(<function_name>)
+*/
+
+DEFcStdLibraryFnct(abort)
+DEFcStdLibraryFnct(abs)
+DEFcStdLibraryFnct(acos)
+DEFcStdLibraryFnct(asctime)
+DEFcStdLibraryFnct(asin)
+DEFcStdLibraryFnct(assert)
+DEFcStdLibraryFnct(atan)
+DEFcStdLibraryFnct(atan2)
+DEFcStdLibraryFnct(atexit)
+DEFcStdLibraryFnct(atof)
+DEFcStdLibraryFnct(atoi)
+DEFcStdLibraryFnct(atol)
+
+DEFcStdLibraryFnct(bsearch)
+
+DEFcStdLibraryFnct(calloc)
+DEFcStdLibraryFnct(ceil)
+DEFcStdLibraryFnct(clearerr)
+DEFcStdLibraryFnct(clock)
+DEFcStdLibraryFnct(cos)
+DEFcStdLibraryFnct(cosh)
+DEFcStdLibraryFnct(ctime)
+
+DEFcStdLibraryFnct(difftime)
+DEFcStdLibraryFnct(div)
+
+DEFcStdLibraryFnct(exit)
+DEFcStdLibraryFnct(exp)
+
+DEFcStdLibraryFnct(fabs)
+DEFcStdLibraryFnct(fclose)
+DEFcStdLibraryFnct(feof)
+DEFcStdLibraryFnct(ferror)
+DEFcStdLibraryFnct(fflush)
+DEFcStdLibraryFnct(fgetc)
+DEFcStdLibraryFnct(fgetpos)
+DEFcStdLibraryFnct(fgets)
+DEFcStdLibraryFnct(floor)
+DEFcStdLibraryFnct(fmod)
+DEFcStdLibraryFnct(fopen)
+DEFcStdLibraryFnct(fprintf)
+DEFcStdLibraryFnct(fputc)
+DEFcStdLibraryFnct(fputs)
+DEFcStdLibraryFnct(fread)
+DEFcStdLibraryFnct(free)
+DEFcStdLibraryFnct(freopen)
+DEFcStdLibraryFnct(frexp)
+DEFcStdLibraryFnct(fscanf)
+DEFcStdLibraryFnct(fseek)
+DEFcStdLibraryFnct(fsetpos)
+DEFcStdLibraryFnct(ftell)
+DEFcStdLibraryFnct(fwrite)
+
+DEFcStdLibraryFnct(getc)
+DEFcStdLibraryFnct(getchar)
+DEFcStdLibraryFnct(getenv)
+DEFcStdLibraryFnct(gets)
+DEFcStdLibraryFnct(gmtime)
+
+DEFcStdLibraryFnct(isalnum)
+DEFcStdLibraryFnct(isalpha)
+DEFcStdLibraryFnct(iscntrl)
+DEFcStdLibraryFnct(isdigit)
+DEFcStdLibraryFnct(isgraph)
+DEFcStdLibraryFnct(islower)
+DEFcStdLibraryFnct(isprint)
+DEFcStdLibraryFnct(ispunct)
+DEFcStdLibraryFnct(isspace)
+DEFcStdLibraryFnct(isupper)
+DEFcStdLibraryFnct(isxdigit)
+
+DEFcStdLibraryFnct(labs)
+DEFcStdLibraryFnct(ldexp)
+DEFcStdLibraryFnct(ldiv)
+DEFcStdLibraryFnct(localeconv)
+DEFcStdLibraryFnct(localtime)
+DEFcStdLibraryFnct(log)
+DEFcStdLibraryFnct(log10)
+DEFcStdLibraryFnct(longjmp)
+
+DEFcStdLibraryFnct(malloc)
+DEFcStdLibraryFnct(mblen)
+DEFcStdLibraryFnct(mbstowcs)
+DEFcStdLibraryFnct(mbtowc)
+DEFcStdLibraryFnct(memchr)
+DEFcStdLibraryFnct(memcmp)
+DEFcStdLibraryFnct(memcpy)
+DEFcStdLibraryFnct(memmove)
+DEFcStdLibraryFnct(memset)
+DEFcStdLibraryFnct(mktime)
+DEFcStdLibraryFnct(modf)
+
+DEFcStdLibraryFnct(perror)
+DEFcStdLibraryFnct(pow)
+DEFcStdLibraryFnct(printf)
+DEFcStdLibraryFnct(putc)
+DEFcStdLibraryFnct(putchar)
+DEFcStdLibraryFnct(puts)
+
+DEFcStdLibraryFnct(qsort)
+
+DEFcStdLibraryFnct(raise)
+DEFcStdLibraryFnct(rand)
+DEFcStdLibraryFnct(realloc)
+DEFcStdLibraryFnct(remove)
+DEFcStdLibraryFnct(rename)
+DEFcStdLibraryFnct(rewind)
+
+DEFcStdLibraryFnct(scanf)
+DEFcStdLibraryFnct(setbuf)
+DEFcStdLibraryFnct(setjmp)
+DEFcStdLibraryFnct(setlocale)
+DEFcStdLibraryFnct(setvbuf)
+DEFcStdLibraryFnct(signal)
+DEFcStdLibraryFnct(sin)
+DEFcStdLibraryFnct(sinh)
+DEFcStdLibraryFnct(sprintf)
+DEFcStdLibraryFnct(sqrt)
+DEFcStdLibraryFnct(srand)
+DEFcStdLibraryFnct(sscanf)
+DEFcStdLibraryFnct(strcat)
+DEFcStdLibraryFnct(strchr)
+DEFcStdLibraryFnct(strcmp)
+DEFcStdLibraryFnct(strcoll)
+DEFcStdLibraryFnct(strcpy)
+DEFcStdLibraryFnct(strcspn)
+DEFcStdLibraryFnct(strerror)
+DEFcStdLibraryFnct(strftime)
+DEFcStdLibraryFnct(strlen)
+DEFcStdLibraryFnct(strncat)
+DEFcStdLibraryFnct(strncmp)
+DEFcStdLibraryFnct(strncpy)
+DEFcStdLibraryFnct(strpbrk)
+DEFcStdLibraryFnct(strrchr)
+DEFcStdLibraryFnct(strspn)
+DEFcStdLibraryFnct(strstr)
+DEFcStdLibraryFnct(strtod)
+DEFcStdLibraryFnct(strtok)
+DEFcStdLibraryFnct(strtol)
+DEFcStdLibraryFnct(strtoul)
+DEFcStdLibraryFnct(strxfrm)
+DEFcStdLibraryFnct(system)
+
+DEFcStdLibraryFnct(tan)
+DEFcStdLibraryFnct(tanh)
+DEFcStdLibraryFnct(time)
+DEFcStdLibraryFnct(tmpfile)
+DEFcStdLibraryFnct(tmpname)
+DEFcStdLibraryFnct(tolower)
+DEFcStdLibraryFnct(toupper)
+
+DEFcStdLibraryFnct(ungetc)
+
+DEFcStdLibraryFnct(va_arg)
+DEFcStdLibraryFnct(va_end)
+DEFcStdLibraryFnct(va_start)
+DEFcStdLibraryFnct(vfprintf)
+DEFcStdLibraryFnct(vprintf)
+DEFcStdLibraryFnct(vsprintf)
+
+DEFcStdLibraryFnct(wcstombs)
+DEFcStdLibraryFnct(wctomb)
+
+
