@@ -29,9 +29,7 @@ LIB_XERCESC_PATHS=-L${XERCESCROOT}/lib
 LIB_LINUX_PATHS=-L/usr/lib -L/usr/local/lib -L/lib
 # LIBRARY NAME
 LIB_EXTRA_NAME = -lc
-LIB_XERCESC_NAME=-lxerces-c1_5 
-
-
+LIB_XERCESC_NAME=-lxerces-c
 
 # DEFINE Objects *.o files and rule name
 XOgastan_OBJS =	nast.o \
