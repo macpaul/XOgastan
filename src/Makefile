@@ -1,7 +1,10 @@
 # XOgastan makefile
 
-include Makefile.incl
+PWD := $(shell 'pwd')
+XOgastanROOT := $(subst /src,,$(PWD))
+export XOgastanROOT
 
+include Makefile.incl
 
 all: $(XOgastan_OBJS)
 	@echo "All objects files *.o done";
