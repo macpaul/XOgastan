@@ -21,7 +21,9 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include "dom/DOM_DOMException.hpp"
+#include <xercesc/dom/DOMException.hpp>
+
+XERCES_CPP_NAMESPACE_USE
 
 // ---------------------------------------------------------------------------
 //  CLASSES
@@ -46,7 +48,7 @@ class XMLDOM_str_exception
     
     \return The char * string currespondent to the error of code.
   */
-  char *operator()(const enum DOM_DOMException::ExceptionCode &code);
+  char *operator()(const enum DOMException::ExceptionCode &code);
 
 };
 

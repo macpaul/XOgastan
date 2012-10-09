@@ -26,42 +26,42 @@
 
 
 char *XMLDOM_str_exception::operator()
-  (const enum DOM_DOMException::ExceptionCode &code) {
+  (const enum DOMException::ExceptionCode &code) {
   
   switch (code) {
     
-  case DOM_DOMException::INDEX_SIZE_ERR: 
-    return "index_size_err"; 
-  case DOM_DOMException::DOMSTRING_SIZE_ERR: 
-    return "domstring_size_err"; 
-  case DOM_DOMException::HIERARCHY_REQUEST_ERR: 
-    return "wrong_request_err"; 
-  case DOM_DOMException::WRONG_DOCUMENT_ERR: 
-    return "wrong_document_err"; 
-  case DOM_DOMException::INVALID_CHARACTER_ERR: 
-    return "invalid_character_err"; 
-  case DOM_DOMException::NO_DATA_ALLOWED_ERR: 
-    return "no_data_allowed_err"; 
-  case DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR: 
-    return "no_modification_allowed_err"; 
-  case DOM_DOMException::NOT_FOUND_ERR: 
-    return "not_found_err"; 
-  case DOM_DOMException::NOT_SUPPORTED_ERR: 
-    return "not_supported_err"; 
-  case DOM_DOMException::INUSE_ATTRIBUTE_ERR: 
-    return "inuse_attribute_err"; 
-  case DOM_DOMException::INVALID_STATE_ERR: 
-    return "invalid_state_err"; 
-  case DOM_DOMException::SYNTAX_ERR: 
-    return "syntax_err"; 
-  case DOM_DOMException::INVALID_MODIFICATION_ERR: 
-    return "invalid_modification_err"; 
-  case DOM_DOMException::NAMESPACE_ERR: 
-    return "namespace_err"; 
-  case DOM_DOMException::INVALID_ACCESS_ERR: 
-    return "invalid_access_err"; 
+  case DOMException::INDEX_SIZE_ERR:
+    return "index_size_err";
+  case DOMException::DOMSTRING_SIZE_ERR:
+    return "domstring_size_err";
+  case DOMException::HIERARCHY_REQUEST_ERR:
+    return "wrong_request_err";
+  case DOMException::WRONG_DOCUMENT_ERR:
+    return "wrong_document_err";
+  case DOMException::INVALID_CHARACTER_ERR:
+    return "invalid_character_err";
+  case DOMException::NO_DATA_ALLOWED_ERR:
+    return "no_data_allowed_err";
+  case DOMException::NO_MODIFICATION_ALLOWED_ERR:
+    return "no_modification_allowed_err";
+  case DOMException::NOT_FOUND_ERR:
+    return "not_found_err";
+  case DOMException::NOT_SUPPORTED_ERR:
+    return "not_supported_err";
+  case DOMException::INUSE_ATTRIBUTE_ERR:
+    return "inuse_attribute_err";
+  case DOMException::INVALID_STATE_ERR:
+    return "invalid_state_err";
+  case DOMException::SYNTAX_ERR:
+    return "syntax_err";
+  case DOMException::INVALID_MODIFICATION_ERR:
+    return "invalid_modification_err";
+  case DOMException::NAMESPACE_ERR:
+    return "namespace_err";
+  case DOMException::INVALID_ACCESS_ERR:
+    return "invalid_access_err";
   }
 
-  return "unknow DOM_DOMexception";
+  return "unknow DOMException";
 
 }

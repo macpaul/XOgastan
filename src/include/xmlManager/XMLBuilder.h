@@ -21,7 +21,9 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include "dom/DOM.hpp"
+#include <xercesc/dom/DOM.hpp>
+
+XERCES_CPP_NAMESPACE_USE
 
 // ---------------------------------------------------------------------------
 //  CLASSES
@@ -46,7 +48,7 @@ class XMLBuilder
   DOMDocument *doc;
 
   //! The root element of the document
-  DOM_Element root;
+  DOMElement root;
 
   //---- Members
 

@@ -42,10 +42,10 @@ build_xmlFunctionDOM::newDOM_Document(void) {
 void
 build_xmlFunctionDOM::addRow(void) 
 {
-  DOM_Element     row;             // <row>...</row>
-  DOM_Element     name;            // <name>..</name>
-  DOM_Element     typeReturned;    // <type_returned>...</type_returned>
-  DOM_Element     source;          // <source>...</source>
+  DOMElement     row;             // <row>...</row>
+  DOMElement     name;            // <name>..</name>
+  DOMElement     typeReturned;    // <type_returned>...</type_returned>
+  DOMElement     source;          // <source>...</source>
 
   rowNumber++;
 
