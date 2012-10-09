@@ -26,10 +26,13 @@
 
 #include "error/bad_a2b.h"
 
-#include "util/XMLString.hpp"
+#include <xercesc/util/XMLString.hpp>
 
 #include <string>
 #include <map>
+
+using namespace std;
+XERCES_CPP_NAMESPACE_USE
 
 // ---------------------------------------------------------------------------
 // CLASS
