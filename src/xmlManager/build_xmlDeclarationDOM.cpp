@@ -29,9 +29,9 @@ void
 build_xmlDeclarationDOM::newDOM_Document(void) {
   DOM_DOMImplementation impl;
 
-  doc = new DOM_Document;
+  doc = new DOMDocument;
 
-  *doc = DOM_Document::createDocument();
+  *doc = DOMDocument::createDocument();
   doc->appendChild(doc->createDocumentType("declaration"));
   root = doc->createElement("declaration");
   doc->appendChild(root);
@@ -152,7 +152,7 @@ build_xmlDeclarationDOM::buildDOM(void)
 	while (p2 != dL->end()) {
 	  dData = *p2;
 	  p2 ++;
-	  // add data into the DOM_Document
+	  // add data into the DOMDocument
 	  addRow();
 	}
       }

@@ -28,9 +28,9 @@
 void 
 build_xmlParameterDOM::newDOM_Document(void) {
   
-  doc = new DOM_Document;
+  doc = new DOMDocument;
 
-  *doc = DOM_Document::createDocument();
+  *doc = DOMDocument::createDocument();
   doc->appendChild(doc->createDocumentType("parameter"));
   root = doc->createElement("parameter");
   doc->appendChild(root);
@@ -114,12 +114,12 @@ build_xmlParameterDOM::buildDOM(void)
 
       if (fData->hasParm()) {
 	pData = fData->firstParm();
-	// add data into the DOM_Document
+	// add data into the DOMDocument
 	addRow();
 	
 	while (fData->hasNextParm()) {
 	  pData = fData->nextParm();
-	  // add data into the DOM_Document
+	  // add data into the DOMDocument
 	  addRow();
 	}
       }

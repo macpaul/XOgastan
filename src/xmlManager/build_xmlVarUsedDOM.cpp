@@ -29,9 +29,9 @@ void
 build_xmlVarUsedDOM::newDOM_Document(void) {
   DOM_DOMImplementation impl;
 
-  doc = new DOM_Document;
+  doc = new DOMDocument;
 
-  *doc = DOM_Document::createDocument();
+  *doc = DOMDocument::createDocument();
   doc->appendChild(doc->createDocumentType("var_used"));
   root = doc->createElement("var_used");
   doc->appendChild(root);
@@ -156,7 +156,7 @@ build_xmlVarUsedDOM::buildDOM(void)
 	while (p2 != vuL->end()) {
 	  vuData = *p2;
 	  p2 ++;
-	  // add data into the DOM_Document
+	  // add data into the DOMDocument
 	  addRow();
 	}
       }

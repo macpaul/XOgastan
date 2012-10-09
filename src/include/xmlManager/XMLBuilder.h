@@ -43,14 +43,14 @@ class XMLBuilder
   //---- Attributes
 
   //! The DOM document that we are building
-  DOM_Document *doc;
+  DOMDocument *doc;
 
   //! The root element of the document
   DOM_Element root;
 
   //---- Members
 
-  //! Create a new DOM_Document
+  //! Create a new DOMDocument
   virtual void newDOM_Document(void) = 0;
  
  public:
@@ -66,7 +66,7 @@ class XMLBuilder
   /*!
     \return The DOM document that we have been built.
   */ 
-  DOM_Document *getDOMDocument(void) 
+  DOMDocument *getDOMDocument(void) 
     { return doc; }
 
   //! Build an XML DOM document

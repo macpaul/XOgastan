@@ -28,9 +28,9 @@
 void 
 build_xmlExprStatDOM::newDOM_Document(void) {
   
-  doc = new DOM_Document;
+  doc = new DOMDocument;
 
-  *doc = DOM_Document::createDocument();
+  *doc = DOMDocument::createDocument();
   doc->appendChild(doc->createDocumentType("expr_statistic"));
   root = doc->createElement("expr_statistic");
   doc->appendChild(root);

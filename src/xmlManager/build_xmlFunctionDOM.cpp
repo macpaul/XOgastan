@@ -28,9 +28,9 @@
 void 
 build_xmlFunctionDOM::newDOM_Document(void) {
   
-  doc = new DOM_Document;
+  doc = new DOMDocument;
 
-  *doc = DOM_Document::createDocument();
+  *doc = DOMDocument::createDocument();
   doc->appendChild(doc->createDocumentType("function"));
   root = doc->createElement("function");
   doc->appendChild(root);
@@ -91,7 +91,7 @@ build_xmlFunctionDOM::buildDOM(void)
       p++;
       // extract data of the function
       fData = dataB->getFnctData();
-      // add data into the DOM_Document
+      // add data into the DOMDocument
       addRow();
     }
   }

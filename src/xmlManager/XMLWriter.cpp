@@ -360,7 +360,7 @@ ostream & operator << (ostream & target, DOM_Node & toWrite)
 
     case DOM_Node::DOCUMENT_TYPE_NODE:
       {
-	DOM_DocumentType doctype = (DOM_DocumentType &) toWrite;;
+	DOMDocumentType doctype = (DOMDocumentType &) toWrite;;
 
 	// original
 	/*
@@ -467,7 +467,7 @@ XMLFormatter & operator << (XMLFormatter & strm, const DOMString & s)
 }
 
 void
-write_XMLonFile (DOM_Document * doc, const char *filePath)
+write_XMLonFile (DOMDocument * doc, const char *filePath)
 {
   DOMPrintFormatTarget *formatTarget;
 

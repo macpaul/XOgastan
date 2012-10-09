@@ -126,14 +126,14 @@ static dataDrawerList              *dataDL;
 static nastNumData                 *nastStat;
 
 // DOM Documents
-static DOM_Document                *functionDOM;
-static DOM_Document                *declarationDOM;
-static DOM_Document                *var_usedDOM;
-static DOM_Document                *parameterDOM;
-static DOM_Document                *stmt_statisticDOM;
-static DOM_Document                *expr_statisticDOM;
-static DOM_Document                *reach_statisticDOM;
-static DOM_Document                *nast_statisticDOM;
+static DOMDocument                *functionDOM;
+static DOMDocument                *declarationDOM;
+static DOMDocument                *var_usedDOM;
+static DOMDocument                *parameterDOM;
+static DOMDocument                *stmt_statisticDOM;
+static DOMDocument                *expr_statisticDOM;
+static DOMDocument                *reach_statisticDOM;
+static DOMDocument                *nast_statisticDOM;
 
 // ---------------------------------------------------------------------------
 //  Local helper methods

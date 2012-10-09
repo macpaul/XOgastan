@@ -64,7 +64,7 @@ class build_xmlReachStatDOM : public build_xmlStatisticDOM
 
   //---- Members
 
-  //! Create a new DOM_Document
+  //! Create a new DOMDocument
   void newDOM_Document(void);
   
  public:

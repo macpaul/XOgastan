@@ -30,9 +30,9 @@ extern char *xmlFile;
 void 
 build_xmlNastStatDOM::newDOM_Document(void) {
   
-  doc = new DOM_Document;
+  doc = new DOMDocument;
 
-  *doc = DOM_Document::createDocument();
+  *doc = DOMDocument::createDocument();
   doc->appendChild(doc->createDocumentType("nast_statistic"));
   root = doc->createElement("nast_statistic");
   doc->appendChild(root);

@@ -28,9 +28,9 @@
 void 
 build_xmlReachStatDOM::newDOM_Document(void) {
   
-  doc = new DOM_Document;
+  doc = new DOMDocument;
 
-  *doc = DOM_Document::createDocument();
+  *doc = DOMDocument::createDocument();
   doc->appendChild(doc->createDocumentType("reach_statistic"));
   root = doc->createElement("reach_statistic");
   doc->appendChild(root);
