@@ -194,19 +194,19 @@ static const XMLCh gNotation[] = {
 //  Forward references
 // ---------------------------------------------------------------------------
 ostream& operator<<(ostream& target, const DOMString& toWrite);
-ostream& operator<<(ostream& target, DOM_Node& toWrite);
+ostream& operator<<(ostream& target, DOMNode& toWrite);
 XMLFormatter& operator<< (XMLFormatter& strm, const DOMString& s);
 
 // ---------------------------------------------------------------------------
-//  ostream << DOM_Node
+//  ostream << DOMNode
 //
 //  Stream out a DOM node, and, recursively, all of its children. This
 //  function is the heart of writing a DOM tree out as XML source. Give it
 //  a document node and it will do the whole thing.
 // ---------------------------------------------------------------------------
-ostream & operator << (ostream & target, DOM_Node & toWrite)
+ostream & operator << (ostream & target, DOMNode & toWrite)
 {
-  // Important : This function don't dump the DOM_Node::XML_DECL_NODE
+  // Important : This function don't dump the DOMNode::XML_DECL_NODE
 
   // Get the name and value out for convenience
   DOMString nodeName = toWrite.getNodeName ();
@@ -215,7 +215,7 @@ ostream & operator << (ostream & target, DOM_Node & toWrite)
 
   switch (toWrite.getNodeType ())
     {
-    case DOM_Node::TEXT_NODE:
+    case DOMNode::TEXT_NODE:
       {
 	gFormatter->formatBuf (nodeValue.rawBuffer (),
 			       lent, XMLFormatter::CharEscapes);
@@ -223,7 +223,7 @@ ostream & operator << (ostream & target, DOM_Node & toWrite)
       }
 
 
-    case DOM_Node::PROCESSING_INSTRUCTION_NODE:
+    case DOMNode::PROCESSING_INSTRUCTION_NODE:
       {
 	*gFormatter << XMLFormatter::NoEscapes << gStartPI << nodeName;
 	if (lent > 0)
@@ -235,10 +235,10 @@ ostream & operator << (ostream & target, DOM_Node & toWrite)
       }
 
 
-    case DOM_Node::DOCUMENT_NODE:
+    case DOMNode::DOCUMENT_NODE:
       {
 
-	DOM_Node child = toWrite.getFirstChild ();
+	DOMNode child = toWrite.getFirstChild ();
 	while (child != 0)
 	  {
 	    target << child << endl;
@@ -248,7 +248,7 @@ ostream & operator << (ostream & target, DOM_Node & toWrite)
       }
 
 
-    case DOM_Node::ELEMENT_NODE:
+    case DOMNode::ELEMENT_NODE:
       {
 	// The name has to be representable without any escapes
 	*gFormatter << XMLFormatter::NoEscapes << chOpenAngle << nodeName;
@@ -260,7 +260,7 @@ ostream & operator << (ostream & target, DOM_Node & toWrite)
 	int attrCount = attributes.getLength ();
 	for (int i = 0; i < attrCount; i++)
 	  {
-	    DOM_Node attribute = attributes.item (i);
+	    DOMNode attribute = attributes.item (i);
 
 	    //
 	    //  Again the name has to be completely representable. But the
@@ -279,7 +279,7 @@ ostream & operator << (ostream & target, DOM_Node & toWrite)
 	//  Test for the presence of children, which includes both
 	//  text content and nested elements.
 	//
-	DOM_Node child = toWrite.getFirstChild ();
+	DOMNode child = toWrite.getFirstChild ();
 	if (child != 0)
 	  {
 	    // There are children. Close start-tag, and output children.
@@ -288,10 +288,10 @@ ostream & operator << (ostream & target, DOM_Node & toWrite)
 
 	    // Checks if we can insert a "\n"
 	    // We can insert a "\n" only if the child aren't node with text
-	    DOM_Node childOfChild = child.getFirstChild();
+	    DOMNode childOfChild = child.getFirstChild();
 	    if (childOfChild != 0) {
-	      if ( (childOfChild.getNodeType() == DOM_Node::TEXT_NODE) ||
-		   (childOfChild.getNodeType() == DOM_Node::CDATA_SECTION_NODE))
+	      if ( (childOfChild.getNodeType() == DOMNode::TEXT_NODE) ||
+		   (childOfChild.getNodeType() == DOMNode::CDATA_SECTION_NODE))
 		*gFormatter << "\n";
 	    }
 
@@ -320,9 +320,9 @@ ostream & operator << (ostream & target, DOM_Node & toWrite)
       }
 
 
-    case DOM_Node::ENTITY_REFERENCE_NODE:
+    case DOMNode::ENTITY_REFERENCE_NODE:
       {
-	DOM_Node child;
+	DOMNode child;
 #if 0
 	for (child = toWrite.getFirstChild ();
 	     child != 0; child = child.getNextSibling ())
@@ -342,7 +342,7 @@ ostream & operator << (ostream & target, DOM_Node & toWrite)
       }
 
 
-    case DOM_Node::CDATA_SECTION_NODE:
+    case DOMNode::CDATA_SECTION_NODE:
       {
 	*gFormatter << XMLFormatter::NoEscapes << gStartCDATA
 	  << nodeValue << gEndCDATA;
@@ -350,7 +350,7 @@ ostream & operator << (ostream & target, DOM_Node & toWrite)
       }
 
 
-    case DOM_Node::COMMENT_NODE:
+    case DOMNode::COMMENT_NODE:
       {
 	*gFormatter << XMLFormatter::NoEscapes << gStartComment
 		    << nodeValue << gEndComment << "\n";
@@ -358,7 +358,7 @@ ostream & operator << (ostream & target, DOM_Node & toWrite)
       }
 
 
-    case DOM_Node::DOCUMENT_TYPE_NODE:
+    case DOMNode::DOCUMENT_TYPE_NODE:
       {
 	DOMDocumentType doctype = (DOMDocumentType &) toWrite;;
 
@@ -403,7 +403,7 @@ ostream & operator << (ostream & target, DOM_Node & toWrite)
       }
 
 
-    case DOM_Node::ENTITY_NODE:
+    case DOMNode::ENTITY_NODE:
       {
 	*gFormatter << XMLFormatter::NoEscapes << gStartEntity << nodeName;
 
