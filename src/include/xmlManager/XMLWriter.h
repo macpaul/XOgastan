@@ -21,32 +21,33 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/PlatformUtils.hpp>
-#include <util/XMLString.hpp>
-#include <util/XMLUniDefs.hpp>
-#include <framework/XMLFormatter.hpp>
-#include <util/TranscodingException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/framework/XMLFormatter.hpp>
+#include <xercesc/util/TranscodingException.hpp>
 
+#include <xercesc/dom/DOMException.hpp>
 
-#include <dom/DOM_DOMException.hpp>
-
-#include <dom/DOM.hpp>
+#include <xercesc/dom/DOM.hpp>
 #include <string.h>
 #include <stdlib.h>
 
 #include <fstream>
 
+using namespace std;
+XERCES_CPP_NAMESPACE_USE
 
 // ---------------------------------------------------------------------------
 //  FILES
 // ---------------------------------------------------------------------------
 namespace XMLWriter {
-  //! Write a DOM_Document on the file path
+  //! Write a DOMDocument on the file path
   /*!
     \param doc the document to write
     \param filePath the path of the output file 
   */
-  extern void write_XMLonFile(DOM_Document *doc, const char *filePath);
+  extern void write_XMLonFile(DOMDocument *doc, const char *filePath);
 }
 #endif
 
